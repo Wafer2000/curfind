@@ -34,7 +34,7 @@ class SplashLogo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 100, 0, 0),
-      child: FadeIn(
+      child: FadeInUp(
         child: const Align(
           alignment: Alignment.topCenter,
           child: Image(width: 120, image: AssetImage('assets/slpash_logo.png')),
