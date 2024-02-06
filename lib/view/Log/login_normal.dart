@@ -32,15 +32,17 @@ class SplashLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 100, 0, 0),
-      child: FadeInUp(
-        child: const Align(
-          alignment: Alignment.topCenter,
-          child: Image(width: 120, image: AssetImage('assets/slpash_logo.png')),
+    return Stack(children: [
+      Padding(
+        padding: const EdgeInsets.fromLTRB(0, 100, 0, 0),
+        child: FadeInUp(
+          child: Align(
+              alignment: Alignment.topCenter,
+              child: SizedBox(
+                  width: 120, child: Image.asset('assets/slpash_logo.png'))),
         ),
       ),
-    );
+    ]);
   }
 }
 
@@ -54,12 +56,14 @@ class Wave extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return Stack(
       children: [
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: SizedBox(
-            width: size.width,
-            child: Image.asset(
-              'assets/green_super_wave.png',
+        FadeInUpBig(
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: SizedBox(
+              width: size.width,
+              child: Image.asset(
+                'assets/green_super_wave.png',
+              ),
             ),
           ),
         ),
@@ -69,9 +73,7 @@ class Wave extends StatelessWidget {
 }
 
 class OptionsLogin extends StatelessWidget {
-  const OptionsLogin({
-    super.key,
-  });
+  const OptionsLogin({super.key});
 
   @override
   Widget build(BuildContext context) {

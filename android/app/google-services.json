@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "683810352443",
+    "project_id": "curfind",
+    "storage_bucket": "curfind.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:683810352443:android:0bdd78dafcc852f3f8db1e",
+        "android_client_info": {
+          "package_name": "com.curfind"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "683810352443-t0l2gvbs07mdo0akm8creprusm3n30v0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_bpQOYD6ePJ61Zf00ZJIpBDQ1GmYk-d4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "683810352443-t0l2gvbs07mdo0akm8creprusm3n30v0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
