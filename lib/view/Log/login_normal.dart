@@ -272,10 +272,10 @@ class BottomGoogle extends StatelessWidget {
           );*/
         },
         style: ElevatedButton.styleFrom(
-            shape: const CircleBorder(),
-            backgroundColor: WallpaperColor.white,
-            elevation: 4,
-          ),
+          shape: const CircleBorder(),
+          backgroundColor: WallpaperColor.white,
+          elevation: 4,
+        ),
         child: Image.asset('assets/google_grey_icon.png', width: 33),
       ),
     );
@@ -297,9 +297,9 @@ class BottomApple extends StatelessWidget {
           );*/
         },
         style: ElevatedButton.styleFrom(
-            shape: const CircleBorder(),
-            backgroundColor: WallpaperColor.white,
-            elevation: 4,
+          shape: const CircleBorder(),
+          backgroundColor: WallpaperColor.white,
+          elevation: 4,
         ),
         child: Image.asset('assets/apple_grey_icon.png', width: 33),
       ),
