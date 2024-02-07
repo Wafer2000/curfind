@@ -85,7 +85,7 @@ class OptionsLogin extends StatelessWidget {
               ),
               BottomApple(),
               SizedBox(
-                height: 10,
+                height: 12,
               ),
               BottomAlternate(),
               SizedBox(

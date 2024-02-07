@@ -16,7 +16,6 @@ class _LoginNormalState extends State<LoginNormal> {
       backgroundColor: WallpaperColor.purple,
       body: const Stack(
         children: [
-          SplashLogo(),
           Wave(),
           OptionsLogin(),
         ],
@@ -33,14 +32,11 @@ class SplashLogo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
-      Padding(
-        padding: const EdgeInsets.fromLTRB(0, 100, 0, 0),
-        child: FadeInUp(
-          child: Align(
-              alignment: Alignment.topCenter,
-              child: SizedBox(
-                  width: 120, child: Image.asset('assets/slpash_logo.png'))),
-        ),
+      FadeInUp(
+        child: Align(
+            alignment: Alignment.topCenter,
+            child: SizedBox(
+                width: 120, child: Image.asset('assets/slpash_logo.png'))),
       ),
     ]);
   }
@@ -80,31 +76,40 @@ class OptionsLogin extends StatelessWidget {
     return Center(
       child: FadeInUpBig(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(10, 10, 15, 8),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Inputs(),
-              const SizedBox(
-                height: 40,
-              ),
-              const BottomLogin(),
-              const SizedBox(
-                height: 19,
-              ),
-              const ChangePassword(),
-              const SizedBox(
-                height: 22,
-              ),
-              const Bottoms(),
-              const SizedBox(
-                height: 29,
-              ),
-              const Register(),
-              const SizedBox(
-                height: 110,
-              ),
-            ],
+          padding: const EdgeInsets.fromLTRB(10, 0, 15, 8),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                const SizedBox(
+                  height: 60,
+                ),
+                const SplashLogo(),
+                const SizedBox(
+                  height: 130,
+                ),
+                Inputs(),
+                const SizedBox(
+                  height: 40,
+                ),
+                const BottomLogin(),
+                const SizedBox(
+                  height: 19,
+                ),
+                const ChangePassword(),
+                const SizedBox(
+                  height: 22,
+                ),
+                const Bottoms(),
+                const SizedBox(
+                  height: 29,
+                ),
+                const Register(),
+                const SizedBox(
+                  height: 110,
+                ),
+              ],
+            ),
           ),
         ),
       ),
