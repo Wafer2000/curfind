@@ -12,15 +12,18 @@ class LoginNormal extends StatefulWidget {
 class _LoginNormalState extends State<LoginNormal> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: WallpaperColor.purple,
-      body: const Stack(
-        children: [
-          Wave(),
-          OptionsLogin(),
-        ],
+    return const Stack(children: [
+      Wave(),
+      Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: Colors.transparent,
+        body: Stack(
+          children: [
+            OptionsLogin(),
+          ],
+        ),
       ),
-    );
+    ]);
   }
 }
 
@@ -50,20 +53,25 @@ class Wave extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Stack(
-      children: [
-        FadeInUpBig(
-          child: Align(
-            alignment: Alignment.bottomCenter,
-            child: SizedBox(
-              width: size.width,
-              child: Image.asset(
-                'assets/green_super_wave.png',
+    return Container(
+      color: WallpaperColor.purple,
+      width: size.width,
+      height: size.height, 
+      child: Stack(
+        children: [
+          FadeInUpBig(
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: SizedBox(
+                width: size.width,
+                child: Image.asset(
+                  'assets/green_super_wave.png',
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
