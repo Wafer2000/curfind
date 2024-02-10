@@ -1,9 +1,10 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:curfind/style/global_colors.dart';
-import 'package:curfind/view/Log/login_normal.dart';
+import 'package:curfind/components/routes/Log/login_normal.dart';
 import 'package:flutter/material.dart';
 
 class SplashLogin extends StatefulWidget {
+  static const String routname = 'SplashLogin';
   const SplashLogin({super.key});
 
   @override
@@ -35,13 +36,13 @@ class SplashLogo extends StatelessWidget {
   Widget build(BuildContext context) {
     return FadeIn(
       child: Align(
-          alignment: Alignment.center,
-          child: Image.asset(
-            'assets/slpash_logo.png',
-            width: 120,
-            height: 213.5,
-          ),
+        alignment: Alignment.center,
+        child: Image.asset(
+          'assets/slpash_logo.png',
+          width: 120,
+          height: 213.5,
         ),
+      ),
     );
   }
 }
@@ -57,9 +58,9 @@ class Wave extends StatelessWidget {
       alignment: Alignment.bottomCenter,
       child: FadeInUpBig(
         child: Image.asset(
-            'assets/green_wave.png',
-            height: 310,
-          ),
+          'assets/green_wave.png',
+          height: 310,
+        ),
       ),
     );
   }
@@ -176,10 +177,11 @@ class BottomAlternate extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Navigate to the desired page
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const LoginNormal()),
+          MaterialPageRoute(
+            builder: (context) => const LoginNormal(),
+          ),
         );
       },
       child: const Text('Continuar de otra forma',
