@@ -18,7 +18,13 @@ class _ScreensState extends State<Screens> {
 
   @override
   Widget build(BuildContext context) {
-    final screens = [const Messages(), const History(), const Home(), const Companie(), const Perfil()];
+    final screens = [
+      const Messages(),
+      const History(),
+      const Home(),
+      const Companie(),
+      const Perfil()
+    ];
 
     return Scaffold(
       body: IndexedStack(
