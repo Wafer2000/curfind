@@ -1,5 +1,5 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:curfind/components/routes/views/home.dart';
+import 'package:curfind/components/routes/screens.dart';
 import 'package:curfind/firebase/firebase_auth.dart';
 import 'package:curfind/style/global_colors.dart';
 import 'package:flutter/material.dart';
@@ -165,7 +165,7 @@ class _InputsState extends State<Inputs> {
       // Si el inicio de sesión es exitoso, puedes navegar a otra pantalla
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const Home()),
+        MaterialPageRoute(builder: (context) => const Screens()),
       );
     } catch (e) {
       // Si hubo un error, muestra un mensaje al usuario

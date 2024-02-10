@@ -1,7 +1,7 @@
 import 'package:curfind/components/routes/Log/splash_login.dart';
 import 'package:curfind/firebase/firebase_options.dart';
 import 'package:curfind/shared/prefe_users.dart';
-import 'package:curfind/components/routes/views/home.dart';
+import 'package:curfind/components/routes/screens.dart';
 import 'package:curfind/components/splash_view.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +33,7 @@ class App extends StatelessWidget {
       routes: {
         SplashLogin.routname: (contest) => const SplashLogin(),
       },*/
-      home: Home(),
+      home: Screens(),
     );
   }
 }
