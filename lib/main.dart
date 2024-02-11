@@ -27,13 +27,13 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      /*initialRoute: prefs.ultimatePage,
+      initialRoute: prefs.ultimatePage,
       routes: {
         SplashLogin.routname: (contest) => const SplashLogin(),
-      },*/
-      home: Screens(),
+      },
+      //home: Screens(),
     );
   }
 }

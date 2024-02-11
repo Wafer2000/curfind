@@ -17,11 +17,16 @@ class Screens extends StatefulWidget {
 class _ScreensState extends State<Screens> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   bool? _isSwitched;
-  int selectedIndex = 0;
+  int selectedIndex = 2;
 
   @override
   Widget build(BuildContext context) {
-    Color iconColor = _isSwitched == true ? IconColor.purple().color : IconColor.green().color;
+    Color iconColor = _isSwitched == true
+        ? IconColor.purple().color
+        : IconColor.green().color;
+    Color backColor = _isSwitched == true
+        ? WallpaperColor.purple().color
+        : WallpaperColor.green().color;
 
     final screens = [
       const Messages(),
@@ -38,9 +43,13 @@ class _ScreensState extends State<Screens> {
             .snapshots(),
         builder:
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-
           _isSwitched = snapshot.data?['Estado'];
-          iconColor = _isSwitched == true ? IconColor.purple().color : IconColor.green().color;
+          iconColor = _isSwitched == true
+              ? IconColor.purple().color
+              : IconColor.green().color;
+          backColor = _isSwitched == true
+              ? WallpaperColor.purple().color
+              : WallpaperColor.green().color;
 
           return Scaffold(
             body: IndexedStack(
@@ -48,8 +57,10 @@ class _ScreensState extends State<Screens> {
               children: screens,
             ),
             bottomNavigationBar: BottomNavigationBar(
-              type: BottomNavigationBarType.shifting,
               currentIndex: selectedIndex,
+              showSelectedLabels: true,
+              type: BottomNavigationBarType.fixed,
+              backgroundColor: backColor,
               onTap: (value) {
                 setState(() {
                   selectedIndex = value;
@@ -58,9 +69,15 @@ class _ScreensState extends State<Screens> {
               elevation: 0,
               items: [
                 BottomNavigationBarItem(
-                    icon: Image.asset('assets/message.png',
-                        width: 29.9, height: 29.9, color: iconColor),
-                    label: ''),
+                  icon: Image.asset(
+                    'assets/message.png',
+                    width: 29.9,
+                    height: 29.9,
+                    color: iconColor,
+                  ),
+                  label: '',
+                  backgroundColor: backColor,
+                ),
                 BottomNavigationBarItem(
                     icon: Image.asset(
                       'assets/history.png',
@@ -68,14 +85,16 @@ class _ScreensState extends State<Screens> {
                       height: 26.3,
                       color: iconColor,
                     ),
-                    label: ''),
+                    label: '',
+                    backgroundColor: backColor),
                 BottomNavigationBarItem(
                     icon: Image.asset(
                       'assets/logo_curfind.png',
                       width: 28.2,
                       height: 44.6,
                     ),
-                    label: ''),
+                    label: '',
+                    backgroundColor: backColor),
                 BottomNavigationBarItem(
                     icon: Image.asset(
                       'assets/companie.png',
@@ -83,14 +102,16 @@ class _ScreensState extends State<Screens> {
                       height: 29.6,
                       color: iconColor,
                     ),
-                    label: ''),
-                const BottomNavigationBarItem(
-                    icon: CircleAvatar(
+                    label: '',
+                    backgroundColor: backColor),
+                BottomNavigationBarItem(
+                    icon: const CircleAvatar(
                       backgroundImage: AssetImage(
                         'assets/photo_perfil.png',
                       ),
                     ),
-                    label: '')
+                    label: '',
+                    backgroundColor: backColor)
               ],
             ),
           );

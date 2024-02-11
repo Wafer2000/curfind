@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously, unused_field
+
 import 'package:animate_do/animate_do.dart';
 import 'package:curfind/components/routes/screens.dart';
 import 'package:curfind/firebase/firebase_auth.dart';
@@ -12,10 +14,8 @@ class LoginNormal extends StatefulWidget {
 }
 
 class _LoginNormalState extends State<LoginNormal> {
-
   @override
   Widget build(BuildContext context) {
-
     return const Stack(children: [
       Wave(),
       Scaffold(
@@ -127,7 +127,7 @@ class OptionsLogin extends StatelessWidget {
 }
 
 class Inputs extends StatefulWidget {
-  const Inputs({Key? key}) : super(key: key);
+  const Inputs({super.key});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -152,13 +152,14 @@ class _InputsState extends State<Inputs> {
     });
   }
 
-  
-
   void changeColor() {
     // Add your code here to change the color
   }
 
-  void _signInWithEmailAndPassword(BuildContext context, TextEditingController accountController, TextEditingController passwordController) async {
+  void _signInWithEmailAndPassword(
+      BuildContext context,
+      TextEditingController accountController,
+      TextEditingController passwordController) async {
     final account = accountController.text;
     final password = passwordController.text;
 
@@ -171,10 +172,10 @@ class _InputsState extends State<Inputs> {
           .signInWithEmailAndPassword(email: account, password: password);
 
       // Si el inicio de sesión es exitoso, puedes navegar a otra pantalla
-      /*Navigator.pushReplacement(
+      Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Screens()),
-      );*/
+        MaterialPageRoute(builder: (context) => const Screens()),
+      );
     } catch (e) {
       // Si hubo un error, muestra un mensaje al usuario
       ScaffoldMessenger.of(context).showSnackBar(
@@ -253,6 +254,7 @@ class InputAccount extends StatefulWidget {
 }
 
 class _InputAccountState extends State<InputAccount> {
+  final focusNode = FocusNode();
   String? _accountErrorText;
 
   @override
@@ -260,13 +262,19 @@ class _InputAccountState extends State<InputAccount> {
     final inputsState = context.findAncestorStateOfType<_InputsState>()!;
 
     return TextField(
+      focusNode: focusNode,
+      onTapOutside: (event) {
+        focusNode.unfocus();
+      },
       controller: widget._accountController,
       style: TextStyle(
           color: TextColor.purple().color, fontSize: 18, fontFamily: 'Poppins'),
       decoration: InputDecoration(
         labelText: 'Correo',
         labelStyle: TextStyle(
-            color: TextColor.purple().color, fontSize: 15, fontFamily: 'Poppins'),
+            color: TextColor.purple().color,
+            fontSize: 15,
+            fontFamily: 'Poppins'),
         enabledBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: TextColor.purple().color, width: 2),
         ),
@@ -298,6 +306,7 @@ class InputPassword extends StatefulWidget {
 }
 
 class _InputPasswordState extends State<InputPassword> {
+  final focusNode = FocusNode();
   String? _passwordErrorText;
 
   @override
@@ -305,6 +314,10 @@ class _InputPasswordState extends State<InputPassword> {
     final inputsState = context.findAncestorStateOfType<_InputsState>()!;
 
     return TextField(
+      focusNode: focusNode,
+      onTapOutside: (event) {
+        focusNode.unfocus();
+      },
       obscureText: true,
       controller: widget._passwordController,
       style: TextStyle(
@@ -312,7 +325,9 @@ class _InputPasswordState extends State<InputPassword> {
       decoration: InputDecoration(
         labelText: 'Contraseña',
         labelStyle: TextStyle(
-            color: TextColor.purple().color, fontSize: 15, fontFamily: 'Poppins'),
+            color: TextColor.purple().color,
+            fontSize: 15,
+            fontFamily: 'Poppins'),
         enabledBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: TextColor.purple().color, width: 2),
         ),
