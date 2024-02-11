@@ -1,29 +1,27 @@
-import 'package:hexcolor/hexcolor.dart';
+import 'package:flutter/material.dart';
 
 class WallpaperColor {
-  static HexColor black = HexColor('#000000');
-  static HexColor white = HexColor('#ffffff');
-  static HexColor green = HexColor('#F2FFF7');
-  static HexColor purple = HexColor('#F8F4FF');
+  final Color color;
+
+  const WallpaperColor._(this.color);
+
+  factory WallpaperColor.black() {
+    return const WallpaperColor._(Color(0xFF000000));
+  }
+
+  factory WallpaperColor.white() {
+    return const WallpaperColor._(Color(0xFFFFFFFF));
+  }
+
+  factory WallpaperColor.green() {
+    return const WallpaperColor._(Color(0xFFF2FFF7));
+  }
+
+  factory WallpaperColor.purple() {
+    return const WallpaperColor._(Color(0xFFF8F4FF));
+  }
 }
 
-class IconColor {
-  static HexColor black = HexColor('#000000');
-  static HexColor white = HexColor('#ffffff');
-  static HexColor green = HexColor('#53D39A');
-  static HexColor purple = HexColor('#9855E3');
-}
-
-class TextColor {
-  static HexColor black = HexColor('#000000');
-  static HexColor white = HexColor('#ffffff');
-  static HexColor green = HexColor('#F2FFF7');
-  static HexColor purple = HexColor('#F8F4FF');
-  static HexColor purpleWhite = HexColor('#9880C6');
-  static HexColor purpleBlack = HexColor('#9855E3');
-}
-
-/*
 class IconColor {
   final Color color;
 
@@ -45,4 +43,34 @@ class IconColor {
     return const IconColor._(Color(0xFF9855E3));
   }
 }
-*/ 
+
+class TextColor {
+  final Color color;
+
+  const TextColor._(this.color);
+
+  factory TextColor.black() {
+    return const TextColor._(Color(0xFF000000));
+  }
+
+  factory TextColor.white() {
+    return const TextColor._(Color(0xFFFFFFFF));
+  }
+
+  factory TextColor.greenlight() {
+    return const TextColor._(Color(0xFFF2FFF7));
+  }
+
+  factory TextColor.purple() {
+    return const TextColor._(Color(0xFF9880C6));
+  }
+
+  factory TextColor.purpleLight() {
+    return const TextColor._(Color(0xFFF8F4FF));
+  }
+
+  factory TextColor.purpleDark() {
+    return const TextColor._(Color(0xFF9855E3));
+  }
+}
+

@@ -1,9 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curfind/components/routes/views/companie.dart';
 import 'package:curfind/components/routes/views/history.dart';
 import 'package:curfind/components/routes/views/home.dart';
 import 'package:curfind/components/routes/views/menssages.dart';
 import 'package:curfind/components/routes/views/perfil.dart';
-import 'package:curfind/style/global_colors.dart';
 import 'package:flutter/material.dart';
 
 class Screens extends StatefulWidget {
@@ -14,7 +14,37 @@ class Screens extends StatefulWidget {
 }
 
 class _ScreensState extends State<Screens> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  bool? _isSwitched;
   int selectedIndex = 0;
+  Color iconColor = Colors.purple;
+
+  @override
+  void initState() {
+    super.initState();
+    _getData();
+  }
+
+  Future<void> _getData() async {
+    try {
+      final snapshot = await _firestore
+          .collection('ColorEstado')
+          .doc('7HQdmSTNdcE8hYmFYYmf')
+          .snapshots()
+          .first;
+
+      if (snapshot.exists) {
+        setState(() {
+          _isSwitched = snapshot.data()!['Estado'];
+          _isSwitched == false
+              ? iconColor = Colors.green
+              : iconColor = Colors.purple;
+        });
+      }
+    } catch (e) {
+      print('Error al obtener el dato: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,19 +72,15 @@ class _ScreensState extends State<Screens> {
         elevation: 0,
         items: [
           BottomNavigationBarItem(
-              icon: Image.asset(
-                'assets/message.png',
-                width: 29.9,
-                height: 29.9,
-                color: IconColor.green,
-              ),
+              icon: Image.asset('assets/message.png',
+                  width: 29.9, height: 29.9, color: iconColor),
               label: ''),
           BottomNavigationBarItem(
               icon: Image.asset(
                 'assets/history.png',
                 width: 29.6,
                 height: 26.3,
-                color: IconColor.green,
+                color: iconColor,
               ),
               label: ''),
           BottomNavigationBarItem(
@@ -69,7 +95,7 @@ class _ScreensState extends State<Screens> {
                 'assets/companie.png',
                 width: 29.6,
                 height: 29.6,
-                color: IconColor.green,
+                color: iconColor,
               ),
               label: ''),
           const BottomNavigationBarItem(

@@ -25,7 +25,7 @@ class _SplashViewState extends State<SplashView> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        backgroundColor: WallpaperColor.purple,
+        backgroundColor: WallpaperColor.purple().color,
         body: Center(
           child: SizedBox(
             width: 120,

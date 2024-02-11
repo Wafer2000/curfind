@@ -12,8 +12,10 @@ class LoginNormal extends StatefulWidget {
 }
 
 class _LoginNormalState extends State<LoginNormal> {
+
   @override
   Widget build(BuildContext context) {
+
     return const Stack(children: [
       Wave(),
       Scaffold(
@@ -56,7 +58,7 @@ class Wave extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Container(
-      color: WallpaperColor.purple,
+      color: WallpaperColor.purple().color,
       width: size.width,
       height: size.height,
       child: Stack(
@@ -150,6 +152,12 @@ class _InputsState extends State<Inputs> {
     });
   }
 
+  
+
+  void changeColor() {
+    // Add your code here to change the color
+  }
+
   void _signInWithEmailAndPassword(BuildContext context, TextEditingController accountController, TextEditingController passwordController) async {
     final account = accountController.text;
     final password = passwordController.text;
@@ -163,10 +171,10 @@ class _InputsState extends State<Inputs> {
           .signInWithEmailAndPassword(email: account, password: password);
 
       // Si el inicio de sesión es exitoso, puedes navegar a otra pantalla
-      Navigator.pushReplacement(
+      /*Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const Screens()),
-      );
+        MaterialPageRoute(builder: (context) => Screens()),
+      );*/
     } catch (e) {
       // Si hubo un error, muestra un mensaje al usuario
       ScaffoldMessenger.of(context).showSnackBar(
@@ -254,16 +262,16 @@ class _InputAccountState extends State<InputAccount> {
     return TextField(
       controller: widget._accountController,
       style: TextStyle(
-          color: TextColor.purpleWhite, fontSize: 18, fontFamily: 'Poppins'),
+          color: TextColor.purple().color, fontSize: 18, fontFamily: 'Poppins'),
       decoration: InputDecoration(
         labelText: 'Correo',
         labelStyle: TextStyle(
-            color: TextColor.purpleWhite, fontSize: 15, fontFamily: 'Poppins'),
+            color: TextColor.purple().color, fontSize: 15, fontFamily: 'Poppins'),
         enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: TextColor.purpleWhite, width: 2),
+          borderSide: BorderSide(color: TextColor.purple().color, width: 2),
         ),
         focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: TextColor.purpleWhite, width: 2),
+          borderSide: BorderSide(color: TextColor.purple().color, width: 2),
         ),
         errorText: _accountErrorText, // Agregar errorText
       ),
@@ -300,16 +308,16 @@ class _InputPasswordState extends State<InputPassword> {
       obscureText: true,
       controller: widget._passwordController,
       style: TextStyle(
-          color: TextColor.purpleWhite, fontSize: 18, fontFamily: 'Poppins'),
+          color: TextColor.purple().color, fontSize: 18, fontFamily: 'Poppins'),
       decoration: InputDecoration(
         labelText: 'Contraseña',
         labelStyle: TextStyle(
-            color: TextColor.purpleWhite, fontSize: 15, fontFamily: 'Poppins'),
+            color: TextColor.purple().color, fontSize: 15, fontFamily: 'Poppins'),
         enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: TextColor.purpleWhite, width: 2),
+          borderSide: BorderSide(color: TextColor.purple().color, width: 2),
         ),
         focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: TextColor.purpleWhite, width: 2),
+          borderSide: BorderSide(color: TextColor.purple().color, width: 2),
         ),
         errorText: _passwordErrorText, // Agregar errorText
       ),
@@ -378,7 +386,7 @@ class ButtomLogin extends StatelessWidget {
         child: ElevatedButton(
           onPressed: onTap,
           style: ElevatedButton.styleFrom(
-            backgroundColor: WallpaperColor.white,
+            backgroundColor: WallpaperColor.white().color,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(30),
             ),
@@ -386,10 +394,10 @@ class ButtomLogin extends StatelessWidget {
           ),
           child: Text('Ingresar',
               style: TextStyle(
-                color: TextColor.purpleWhite,
+                color: TextColor.purple().color,
                 fontSize: 21,
                 decoration: TextDecoration.underline,
-                decorationColor: TextColor.purpleWhite,
+                decorationColor: TextColor.purple().color,
                 fontFamily: 'Poppins',
               )),
         ),
@@ -452,7 +460,7 @@ class BottomGoogle extends StatelessWidget {
         },
         style: ElevatedButton.styleFrom(
           shape: const CircleBorder(),
-          backgroundColor: WallpaperColor.white,
+          backgroundColor: WallpaperColor.white().color,
           elevation: 4,
         ),
         child: Image.asset('assets/google_grey_icon.png', width: 33),
@@ -477,7 +485,7 @@ class BottomApple extends StatelessWidget {
         },
         style: ElevatedButton.styleFrom(
           shape: const CircleBorder(),
-          backgroundColor: WallpaperColor.white,
+          backgroundColor: WallpaperColor.white().color,
           elevation: 4,
         ),
         child: Image.asset('assets/apple_grey_icon.png', width: 33),

@@ -15,7 +15,7 @@ class _SplashLoginState extends State<SplashLogin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: WallpaperColor.purple,
+      backgroundColor: WallpaperColor.purple().color,
       body: const Stack(
         children: [
           SplashLogo(),
@@ -116,7 +116,7 @@ class BottomGoogle extends StatelessWidget {
           );*/
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: WallpaperColor.purple,
+          backgroundColor: WallpaperColor.purple().color,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
           ),
@@ -124,10 +124,10 @@ class BottomGoogle extends StatelessWidget {
         icon: Image.asset('assets/google_icon.png', width: 30),
         label: Text('Continuar con Google',
             style: TextStyle(
-              color: TextColor.purpleWhite,
+              color: TextColor.purple().color,
               fontSize: 18,
               decoration: TextDecoration.underline,
-              decorationColor: TextColor.purpleWhite,
+              decorationColor: TextColor.purple().color,
               fontFamily: 'Poppins',
             )),
       ),
@@ -153,14 +153,14 @@ class BottomApple extends StatelessWidget {
         icon: Image.asset('assets/apple_icon.png', width: 38),
         label: Text('Continuar con Apple ID',
             style: TextStyle(
-              color: TextColor.purpleWhite,
+              color: TextColor.purple().color,
               fontSize: 18,
               decoration: TextDecoration.underline,
-              decorationColor: TextColor.purpleWhite,
+              decorationColor: TextColor.purple().color,
               fontFamily: 'Poppins',
             )),
         style: ElevatedButton.styleFrom(
-          backgroundColor: WallpaperColor.purple,
+          backgroundColor: WallpaperColor.purple().color,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
           ),
