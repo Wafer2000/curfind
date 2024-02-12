@@ -1,10 +1,15 @@
+// ignore_for_file: unused_field, use_build_context_synchronously
+
 import 'package:animate_do/animate_do.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curfind/components/routes/Log/registro_normal.dart';
 import 'package:curfind/components/routes/config/snackbar.dart';
 import 'package:curfind/components/routes/views/screens.dart';
 import 'package:curfind/firebase/firebase_auth.dart';
+import 'package:curfind/shared/prefe_users.dart';
 import 'package:curfind/style/global_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class LoginNormal extends StatefulWidget {
   const LoginNormal({super.key});
@@ -159,18 +164,28 @@ class _InputsState extends State<Inputs> {
     final email = emailController.text;
     final password = passwordController.text;
 
-    await AuthService().signInWithEmailAndPassword(email, password).then((value) => {
-      if (value == 1) {
-        showSnackBar(context, 'Error: El usuario no existe')
-      } else if (value == 2) {
-        showSnackBar(context, 'Error: Contraseña Incorrecta')
-      } else if (value != null) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const Screens()),
-        )
-      }
-    });
+    var pref = PreferencesUser();
+    final now = DateTime.now();
+    final hingreso = DateFormat('HH:mm:ss').format(now);
+    final fingreso = DateFormat('yyyy-MM-dd').format(now);
+
+    var uid = await AuthService().signInWithEmailAndPassword(email, password);
+    if (uid == 1) {
+      showSnackBar(context, 'Error: El usuario no existe');
+    } else if (uid == 2) {
+      showSnackBar(context, 'Error: Contraseña Incorrecta');
+    } else if (uid != null) {
+      pref.ultimateUid = uid;
+
+      FirebaseFirestore.instance.collection('Users').doc(uid).set({
+        'hingreso': hingreso,
+        'fingreso': fingreso,
+      });
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const Screens()),
+      );
+    }
   }
 
   @override

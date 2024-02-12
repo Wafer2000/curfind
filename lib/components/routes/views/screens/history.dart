@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:curfind/shared/prefe_users.dart';
 import 'package:curfind/style/global_colors.dart';
 import 'package:flutter/material.dart';
 
@@ -15,13 +16,14 @@ class _HistoryState extends State<History> {
   
   @override
   Widget build(BuildContext context) {
+  var prefs = PreferencesUser();
     Color backColor = _isSwitched == true
         ? WallpaperColor.purple().color
         : WallpaperColor.green().color;
     return StreamBuilder<DocumentSnapshot>(
         stream: _firestore
             .collection('ColorEstado')
-            .doc('7HQdmSTNdcE8hYmFYYmf')
+            .doc(prefs.ultimateUid)
             .snapshots(),
         builder:
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {

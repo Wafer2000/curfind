@@ -1,39 +1,55 @@
 // ignore_for_file: use_build_context_synchronously, unused_local_variable, unused_field
 import 'package:animate_do/animate_do.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:curfind/components/routes/Log/login_normal.dart';
 import 'package:curfind/components/routes/config/snackbar.dart';
-import 'package:curfind/components/routes/views/screens/guard/crear_perfil.dart';
+import 'package:curfind/components/routes/views/screens/guard/perfil.dart';
 import 'package:curfind/firebase/firebase_auth.dart';
 import 'package:curfind/shared/prefe_users.dart';
 import 'package:curfind/style/global_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'circular_progress.dart';
-
-class RegistroNormal extends StatefulWidget {
-  const RegistroNormal({super.key});
+class CrearPerfil extends StatefulWidget {
+  const CrearPerfil({super.key});
 
   @override
-  State<RegistroNormal> createState() => _RegistroNormalState();
+  State<CrearPerfil> createState() => _CrearPerfilState();
 }
 
-class _RegistroNormalState extends State<RegistroNormal> {
+class _CrearPerfilState extends State<CrearPerfil> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  bool? _isSwitched;
+
   @override
   Widget build(BuildContext context) {
-    return const Stack(children: [
-      Wave(),
-      Scaffold(
-        resizeToAvoidBottomInset: false,
-        backgroundColor: Colors.transparent,
-        body: Stack(
-          children: [
-            OptionsRegister(),
-          ],
-        ),
-      ),
-    ]);
+    var prefs = PreferencesUser();
+
+    Color backColor = _isSwitched == true
+        ? WallpaperColor.purple().color
+        : WallpaperColor.green().color;
+
+    return StreamBuilder<DocumentSnapshot>(
+        stream: _firestore
+            .collection('ColorEstado')
+            .doc(prefs.ultimateUid)
+            .snapshots(),
+        builder:
+            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          _isSwitched = snapshot.data?['Estado'];
+          backColor = _isSwitched == true
+              ? WallpaperColor.purple().color
+              : WallpaperColor.green().color;
+
+          return Scaffold(
+            resizeToAvoidBottomInset: false,
+            backgroundColor: backColor,
+            body: const Stack(
+              children: [
+                OptionsRegister(),
+              ],
+            ),
+          );
+        });
   }
 }
 
@@ -52,37 +68,6 @@ class NombreCurfind extends StatelessWidget {
                 width: 200, child: Image.asset('assets/nombre_curfind.png'))),
       ),
     ]);
-  }
-}
-
-class Wave extends StatelessWidget {
-  const Wave({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    return Container(
-      color: WallpaperColor.purple().color,
-      width: size.width,
-      height: size.height,
-      child: Stack(
-        children: [
-          FadeInUpBig(
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: SizedBox(
-                width: size.width,
-                child: Image.asset(
-                  'assets/green_super_wave.png',
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }
 
@@ -110,14 +95,6 @@ class OptionsRegister extends StatelessWidget {
                 Inputs(),
                 SizedBox(
                   height: 19,
-                ),
-                Bottoms(),
-                SizedBox(
-                  height: 29,
-                ),
-                Login(),
-                SizedBox(
-                  height: 110,
                 ),
               ],
             ),
@@ -172,9 +149,6 @@ class _InputsState extends State<Inputs> {
     final fnacimiento = passwordController.text;
 
     var pref = PreferencesUser();
-    final now = DateTime.now();
-    final hcreacion = DateFormat('HH:mm:ss').format(now);
-    final fcreacion = DateFormat('yyyy-MM-dd').format(now);
 
     var uid = await AuthService().createAcount(email, password);
     if (uid == 1) {
@@ -191,18 +165,11 @@ class _InputsState extends State<Inputs> {
         'email': email,
         'password': password,
         'fnacimiento': fnacimiento,
-        'hcreacion': hcreacion,
-        'fcreacion': fcreacion,
       });
-
-      FirebaseFirestore.instance.collection('ColorEstado').doc(uid).set({
-        'Estado': true,
-      });
-
       Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const CrearPerfil()),
-        );
+        context,
+        MaterialPageRoute(builder: (context) => const Perfil()),
+      );
     }
   }
 
@@ -369,7 +336,7 @@ class _InputApellidosState extends State<InputApellidos> {
       style: TextStyle(
           color: TextColor.purple().color, fontSize: 18, fontFamily: 'Poppins'),
       decoration: InputDecoration(
-        labelText: 'Apellidos',
+        labelText: 'Correo',
         labelStyle: TextStyle(
             color: TextColor.purple().color,
             fontSize: 15,
@@ -621,7 +588,7 @@ class InputValidator {
     try {
       dateFormat.parseStrict(value);
     } catch (e) {
-      return 'La fecha de nacimiento debe este formato: (dd/MM/yyyy)';
+      return 'La fecha de nacimiento debe tener un formato válido (dd/MM/yyyy)';
     }
 
     final parsedDate = dateFormat.parse(value);
@@ -691,94 +658,6 @@ class ButtomLogin extends StatelessWidget {
               )),
         ),
       ),
-    );
-  }
-}
-
-class Bottoms extends StatelessWidget {
-  const Bottoms({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Align(
-      alignment: Alignment.center,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [BottomGoogle(), BottomApple()],
-      ),
-    );
-  }
-}
-
-class BottomGoogle extends StatelessWidget {
-  const BottomGoogle({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 40,
-      child: ElevatedButton(
-        onPressed: () {
-          /*Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => OtherPage()),
-          );*/
-        },
-        style: ElevatedButton.styleFrom(
-          shape: const CircleBorder(),
-          backgroundColor: WallpaperColor.white().color,
-          elevation: 4,
-        ),
-        child: Image.asset('assets/google_grey_icon.png', width: 33),
-      ),
-    );
-  }
-}
-
-class BottomApple extends StatelessWidget {
-  const BottomApple({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 40,
-      child: ElevatedButton(
-        onPressed: () {
-          /*Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => OtherPage()),
-          );*/
-        },
-        style: ElevatedButton.styleFrom(
-          shape: const CircleBorder(),
-          backgroundColor: WallpaperColor.white().color,
-          elevation: 4,
-        ),
-        child: Image.asset('assets/apple_grey_icon.png', width: 33),
-      ),
-    );
-  }
-}
-
-class Login extends StatelessWidget {
-  const Login({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        // Navigate to the desired page
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const LoginNormal()),
-        );
-      },
-      child: const Text('¿Ya tienes una cuenta?',
-          style: TextStyle(
-            color: Color(0xFFF8F4FF),
-            fontSize: 14,
-            fontFamily: 'Poppins',
-          )),
     );
   }
 }

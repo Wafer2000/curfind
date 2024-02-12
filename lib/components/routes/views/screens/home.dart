@@ -1,4 +1,7 @@
+// ignore_for_file: avoid_print, use_build_context_synchronously
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:curfind/shared/prefe_users.dart';
 import 'package:curfind/style/global_colors.dart';
 import 'package:flutter/material.dart';
 
@@ -14,20 +17,23 @@ class _HomeState extends State<Home> {
   bool _isUpdating = false;
   bool? _isSwitched;
 
+
   Future<void> _updateText() async {
+  var prefs = PreferencesUser();
+
     if (!_isUpdating) {
       _isUpdating = true;
       try {
         DocumentSnapshot<Map<String, dynamic>> snapshot = await _firestore
             .collection('ColorEstado')
-            .doc('7HQdmSTNdcE8hYmFYYmf')
+            .doc(prefs.ultimateUid)
             .get();
 
         if (snapshot.exists) {
           bool newValue = !snapshot.data()!['Estado'];
           await _firestore
               .collection('ColorEstado')
-              .doc('7HQdmSTNdcE8hYmFYYmf')
+              .doc(prefs.ultimateUid)
               .update({
             'Estado': newValue,
           });
@@ -62,6 +68,8 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+  var prefs = PreferencesUser();
+  
     Color backColor = _isSwitched == true
         ? WallpaperColor.purple().color
         : WallpaperColor.green().color;
@@ -82,7 +90,7 @@ class _HomeState extends State<Home> {
         child: StreamBuilder<DocumentSnapshot>(
             stream: _firestore
                 .collection('ColorEstado')
-                .doc('7HQdmSTNdcE8hYmFYYmf')
+                .doc(prefs.ultimateUid)
                 .snapshots(),
             builder: (BuildContext context,
                 AsyncSnapshot<DocumentSnapshot> snapshot) {
