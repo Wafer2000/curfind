@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:curfind/components/routes/views/companie.dart';
-import 'package:curfind/components/routes/views/history.dart';
-import 'package:curfind/components/routes/views/home.dart';
-import 'package:curfind/components/routes/views/menssages.dart';
-import 'package:curfind/components/routes/views/perfil.dart';
+import 'package:curfind/components/routes/views/screens/companie.dart';
+import 'package:curfind/components/routes/views/screens/history.dart';
+import 'package:curfind/components/routes/views/screens/home.dart';
+import 'package:curfind/components/routes/views/screens/menssages.dart';
+import 'package:curfind/components/routes/views/screens/perfil.dart';
 import 'package:curfind/style/global_colors.dart';
 import 'package:flutter/material.dart';
 

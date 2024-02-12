@@ -1,19 +1,23 @@
+// ignore_for_file: use_build_context_synchronously
 import 'package:animate_do/animate_do.dart';
-import 'package:curfind/components/routes/Log/registro_normal.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:curfind/components/routes/Log/login_normal.dart';
 import 'package:curfind/components/routes/config/snackbar.dart';
 import 'package:curfind/components/routes/views/screens.dart';
 import 'package:curfind/firebase/firebase_auth.dart';
+import 'package:curfind/shared/prefe_users.dart';
 import 'package:curfind/style/global_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-class LoginNormal extends StatefulWidget {
-  const LoginNormal({super.key});
+class RegistroNormal extends StatefulWidget {
+  const RegistroNormal({super.key});
 
   @override
-  State<LoginNormal> createState() => _LoginNormalState();
+  State<RegistroNormal> createState() => _RegistroNormalState();
 }
 
-class _LoginNormalState extends State<LoginNormal> {
+class _RegistroNormalState extends State<RegistroNormal> {
   @override
   Widget build(BuildContext context) {
     return const Stack(children: [
@@ -23,7 +27,7 @@ class _LoginNormalState extends State<LoginNormal> {
         backgroundColor: Colors.transparent,
         body: Stack(
           children: [
-            OptionsLogin(),
+            OptionsRegister(),
           ],
         ),
       ),
@@ -31,8 +35,8 @@ class _LoginNormalState extends State<LoginNormal> {
   }
 }
 
-class SplashLogo extends StatelessWidget {
-  const SplashLogo({
+class NombreCurfind extends StatelessWidget {
+  const NombreCurfind({
     super.key,
   });
 
@@ -43,7 +47,7 @@ class SplashLogo extends StatelessWidget {
         child: Align(
             alignment: Alignment.topCenter,
             child: SizedBox(
-                width: 120, child: Image.asset('assets/slpash_logo.png'))),
+                width: 200, child: Image.asset('assets/nombre_curfind.png'))),
       ),
     ]);
   }
@@ -80,8 +84,8 @@ class Wave extends StatelessWidget {
   }
 }
 
-class OptionsLogin extends StatelessWidget {
-  const OptionsLogin({super.key});
+class OptionsRegister extends StatelessWidget {
+  const OptionsRegister({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -95,25 +99,21 @@ class OptionsLogin extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 SizedBox(
-                  height: 60,
+                  height: 20,
                 ),
-                SplashLogo(),
+                NombreCurfind(),
                 SizedBox(
-                  height: 130,
+                  height: 80,
                 ),
                 Inputs(),
                 SizedBox(
                   height: 19,
                 ),
-                ChangePassword(),
-                SizedBox(
-                  height: 22,
-                ),
                 Bottoms(),
                 SizedBox(
                   height: 29,
                 ),
-                Register(),
+                Login(),
                 SizedBox(
                   height: 110,
                 ),
@@ -135,8 +135,11 @@ class Inputs extends StatefulWidget {
 }
 
 class _InputsState extends State<Inputs> {
+  final _nombresController = TextEditingController();
+  final _apellidosController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _fnacimientoController = TextEditingController();
   bool _emailIsValid = false;
   bool _passwordIsValid = false;
 
@@ -153,24 +156,42 @@ class _InputsState extends State<Inputs> {
   }
 
   void _signInWithEmailAndPassword(
-      BuildContext context,
-      TextEditingController emailController,
-      TextEditingController passwordController) async {
+    BuildContext context,
+    TextEditingController nombresController,
+    TextEditingController apellidosController,
+    TextEditingController emailController,
+    TextEditingController passwordController,
+    TextEditingController fnacimientoController,
+  ) async {
+    final nombres = nombresController.text;
+    final apellidos = apellidosController.text;
     final email = emailController.text;
     final password = passwordController.text;
+    final fnacimiento = passwordController.text;
 
-    await AuthService().signInWithEmailAndPassword(email, password).then((value) => {
-      if (value == 1) {
-        showSnackBar(context, 'Error: El usuario no existe')
-      } else if (value == 2) {
-        showSnackBar(context, 'Error: Contraseña Incorrecta')
-      } else if (value != null) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const Screens()),
-        )
-      }
-    });
+    var pref = PreferencesUser();
+
+    var uid = await AuthService().createAcount(email, password);
+    if (uid == 1) {
+      showSnackBar(context, 'Error: La contraseña es muy corta');
+    } else if (uid == 2) {
+      showSnackBar(context, 'Error: La cuenta ya existe');
+    } else if (uid != null) {
+      pref.ultimateUid = uid;
+
+      FirebaseFirestore.instance.collection('Users').doc(uid).set({
+        'uid': uid,
+        'nombres': nombres,
+        'apellidos': apellidos,
+        'email': email,
+        'password': password,
+        'fnacimiento': fnacimiento,
+      });
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const Screens()),
+      );
+    }
   }
 
   @override
@@ -180,19 +201,30 @@ class _InputsState extends State<Inputs> {
       children: [
         const SizedBox(height: 40),
         CustomInputs(
+          nombresController: _nombresController,
+          apellidosController: _apellidosController,
           emailController: _emailController,
           passwordController: _passwordController,
+          fnacimientoController: _fnacimientoController,
         ),
         const SizedBox(
           height: 40,
         ),
         ButtomLogin(
+          nombresController: _nombresController,
+          apellidosController: _apellidosController,
           emailController: _emailController,
           passwordController: _passwordController,
+          fnacimientoController: _fnacimientoController,
           onTap: _emailIsValid && _passwordIsValid
               ? () {
                   _signInWithEmailAndPassword(
-                      context, _emailController, _passwordController);
+                      context,
+                      _nombresController,
+                      _apellidosController,
+                      _emailController,
+                      _passwordController,
+                      _fnacimientoController);
                 }
               : null,
         ),
@@ -204,13 +236,22 @@ class _InputsState extends State<Inputs> {
 class CustomInputs extends StatelessWidget {
   const CustomInputs({
     super.key,
+    required TextEditingController nombresController,
+    required TextEditingController apellidosController,
     required TextEditingController emailController,
     required TextEditingController passwordController,
-  })  : _emailController = emailController,
-        _passwordController = passwordController;
+    required TextEditingController fnacimientoController,
+  })  : _nombresController = nombresController,
+        _apellidosController = apellidosController,
+        _emailController = emailController,
+        _passwordController = passwordController,
+        _fnacimientoController = fnacimientoController;
 
+  final TextEditingController _nombresController;
+  final TextEditingController _apellidosController;
   final TextEditingController _emailController;
   final TextEditingController _passwordController;
+  final TextEditingController _fnacimientoController;
 
   @override
   Widget build(BuildContext context) {
@@ -220,12 +261,120 @@ class CustomInputs extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            InputNombres(nombresController: _nombresController),
+            const SizedBox(height: 10),
+            InputApellidos(apellidosController: _apellidosController),
+            const SizedBox(height: 10),
             InputEmail(emailController: _emailController),
             const SizedBox(height: 10),
-            InputPassword(passwordController: _passwordController)
+            InputPassword(passwordController: _passwordController),
+            const SizedBox(height: 10),
+            InputFNacimiento(fnacimientoController: _fnacimientoController)
           ],
         ),
       ),
+    );
+  }
+}
+
+class InputNombres extends StatefulWidget {
+  const InputNombres({
+    required TextEditingController nombresController,
+    super.key,
+  }) : _nombresController = nombresController;
+
+  final TextEditingController _nombresController;
+
+  @override
+  State<InputNombres> createState() => _InputNombresState();
+}
+
+class _InputNombresState extends State<InputNombres> {
+  final focusNode = FocusNode();
+  String? _apellidosErrorText;
+
+  @override
+  Widget build(BuildContext context) {
+    final inputsState = context.findAncestorStateOfType<_InputsState>()!;
+
+    return TextField(
+      focusNode: focusNode,
+      onTapOutside: (event) {
+        focusNode.unfocus();
+      },
+      controller: widget._nombresController,
+      style: TextStyle(
+          color: TextColor.purple().color, fontSize: 18, fontFamily: 'Poppins'),
+      decoration: InputDecoration(
+        labelText: 'Nombres',
+        labelStyle: TextStyle(
+            color: TextColor.purple().color,
+            fontSize: 15,
+            fontFamily: 'Poppins'),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: TextColor.purple().color, width: 2),
+        ),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: TextColor.purple().color, width: 2),
+        ),
+        errorText: _apellidosErrorText, //
+      ),
+      onChanged: (value) {
+        setState(() {
+          _apellidosErrorText = InputValidator.validateNombres(value);
+        });
+      },
+    );
+  }
+}
+
+class InputApellidos extends StatefulWidget {
+  const InputApellidos({
+    required TextEditingController apellidosController,
+    super.key,
+  }) : _apellidosController = apellidosController;
+
+  final TextEditingController _apellidosController;
+
+  @override
+  State<InputApellidos> createState() => _InputApellidosState();
+}
+
+class _InputApellidosState extends State<InputApellidos> {
+  final focusNode = FocusNode();
+  String? _apellidosErrorText;
+
+  @override
+  Widget build(BuildContext context) {
+    final inputsState = context.findAncestorStateOfType<_InputsState>()!;
+
+    return TextField(
+      focusNode: focusNode,
+      onTapOutside: (event) {
+        focusNode.unfocus();
+      },
+      controller: widget._apellidosController,
+      style: TextStyle(
+          color: TextColor.purple().color, fontSize: 18, fontFamily: 'Poppins'),
+      decoration: InputDecoration(
+        labelText: 'Correo',
+        labelStyle: TextStyle(
+            color: TextColor.purple().color,
+            fontSize: 15,
+            fontFamily: 'Poppins'),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: TextColor.purple().color, width: 2),
+        ),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: TextColor.purple().color, width: 2),
+        ),
+        errorText: _apellidosErrorText, // Agregar errorText
+      ),
+      onChanged: (value) {
+        setState(() {
+          _apellidosErrorText = InputValidator.validateApellidos(value);
+        });
+      },
     );
   }
 }
@@ -356,7 +505,69 @@ class _InputPasswordState extends State<InputPassword> {
   }
 }
 
+class InputFNacimiento extends StatefulWidget {
+  const InputFNacimiento({
+    required TextEditingController fnacimientoController,
+    super.key,
+  }) : _fnacimientoController = fnacimientoController;
+
+  final TextEditingController _fnacimientoController;
+
+  @override
+  State<InputFNacimiento> createState() => _InputFNacimientoState();
+}
+
+class _InputFNacimientoState extends State<InputFNacimiento> {
+  final focusNode = FocusNode();
+  String? _fnacimientoErrorText;
+
+  @override
+  Widget build(BuildContext context) {
+    final inputsState = context.findAncestorStateOfType<_InputsState>()!;
+
+    return TextField(
+      focusNode: focusNode,
+      controller: widget._fnacimientoController,
+      style: TextStyle(
+          color: TextColor.purple().color, fontSize: 18, fontFamily: 'Poppins'),
+      decoration: InputDecoration(
+        labelText: 'Fecha de Nacimiento',
+        labelStyle: TextStyle(
+            color: TextColor.purple().color,
+            fontSize: 15,
+            fontFamily: 'Poppins'),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: TextColor.purple().color, width: 2),
+        ),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: TextColor.purple().color, width: 2),
+        ),
+        errorText: _fnacimientoErrorText, // Agregar errorText
+      ),
+      onChanged: (value) {
+        setState(() {
+          _fnacimientoErrorText = InputValidator.validateFNacimiento(value);
+        });
+      },
+    );
+  }
+}
+
 class InputValidator {
+  static String? validateNombres(String value) {
+    if (value == null || value.isEmpty) {
+      return 'El o los nombres son requeridos';
+    }
+    return null;
+  }
+
+  static String? validateApellidos(String value) {
+    if (value == null || value.isEmpty) {
+      return 'El o los apellidos son requeridos';
+    }
+    return null;
+  }
+
   static String? validateEmail(String value) {
     if (value.isEmpty) {
       return 'El correo electrónico es requerido';
@@ -387,19 +598,64 @@ class InputValidator {
     }
     return null;
   }
+
+  static String? validateFNacimiento(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'La fecha de nacimiento es requerida';
+    }
+
+    final dateFormat = DateFormat('dd/MM/yyyy');
+
+    try {
+      dateFormat.parseStrict(value);
+    } catch (e) {
+      return 'La fecha de nacimiento debe tener un formato válido (dd/MM/yyyy)';
+    }
+
+    final parsedDate = dateFormat.parse(value);
+
+    if (parsedDate == null) {
+      return 'La fecha de nacimiento no es válida';
+    }
+
+    final now = DateTime.now();
+    final birthDate =
+        DateTime.utc(parsedDate.year, parsedDate.month, parsedDate.day);
+
+    if (now.isAfter(birthDate)) {
+      final age = now.year - birthDate.year;
+      if (now.month < birthDate.month ||
+          (now.month == birthDate.month && now.day < birthDate.day)) {
+        // Si el mes y el día de nacimiento no han llegado todavía, restar un año a la edad
+        return null;
+      }
+      return null;
+    }
+
+    return 'La fecha de nacimiento no puede ser una fecha futura';
+  }
 }
 
 class ButtomLogin extends StatelessWidget {
   const ButtomLogin({
     super.key,
+    required TextEditingController nombresController,
+    required TextEditingController apellidosController,
     required TextEditingController emailController,
     required TextEditingController passwordController,
+    required TextEditingController fnacimientoController,
     this.onTap,
-  })  : _emailController = emailController,
-        _passwordController = passwordController;
+  })  : _nombresController = nombresController,
+        _apellidosController = apellidosController,
+        _emailController = emailController,
+        _passwordController = passwordController,
+        _fnacimientoController = fnacimientoController;
 
+  final TextEditingController _nombresController;
+  final TextEditingController _apellidosController;
   final TextEditingController _emailController;
   final TextEditingController _passwordController;
+  final TextEditingController _fnacimientoController;
   final VoidCallback? onTap;
 
   @override
@@ -417,7 +673,7 @@ class ButtomLogin extends StatelessWidget {
             ),
             elevation: 4,
           ),
-          child: Text('Ingresar',
+          child: Text('Registrar',
               style: TextStyle(
                 color: TextColor.purple().color,
                 fontSize: 21,
@@ -427,29 +683,6 @@ class ButtomLogin extends StatelessWidget {
               )),
         ),
       ),
-    );
-  }
-}
-
-class ChangePassword extends StatelessWidget {
-  const ChangePassword({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      /*onTap: () {
-        // Navigate to the desired page
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const LoginNormal()),
-        );
-      },*/
-      child: const Text('Cambiar contraseña',
-          style: TextStyle(
-            color: Color(0xFFF8F4FF),
-            fontSize: 14,
-            fontFamily: 'Poppins',
-          )),
     );
   }
 }
@@ -519,8 +752,8 @@ class BottomApple extends StatelessWidget {
   }
 }
 
-class Register extends StatelessWidget {
-  const Register({super.key});
+class Login extends StatelessWidget {
+  const Login({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -529,10 +762,10 @@ class Register extends StatelessWidget {
         // Navigate to the desired page
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const RegistroNormal()),
+          MaterialPageRoute(builder: (context) => const LoginNormal()),
         );
       },
-      child: const Text('¿No tienes una cuenta?',
+      child: const Text('¿Ya tienes una cuenta?',
           style: TextStyle(
             color: Color(0xFFF8F4FF),
             fontSize: 14,

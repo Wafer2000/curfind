@@ -14,4 +14,12 @@ class PreferencesUser {
   set ultimatePage(String value) {
     _prefs.setString('ultimatePage', value);
   }
+
+  String get ultimateUid {
+    return _prefs.getString('ultimateUid') ?? '';
+  }
+
+  set ultimateUid(String value) {
+    _prefs.setString('ultimateUid', value);
+  }
 }
