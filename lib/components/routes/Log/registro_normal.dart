@@ -10,8 +10,6 @@ import 'package:curfind/style/global_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'circular_progress.dart';
-
 class RegistroNormal extends StatefulWidget {
   const RegistroNormal({super.key});
 
@@ -20,6 +18,7 @@ class RegistroNormal extends StatefulWidget {
 }
 
 class _RegistroNormalState extends State<RegistroNormal> {
+
   @override
   Widget build(BuildContext context) {
     return const Stack(children: [
@@ -200,9 +199,9 @@ class _InputsState extends State<Inputs> {
       });
 
       Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const CrearPerfil()),
-        );
+        context,
+        MaterialPageRoute(builder: (context) => const CrearPerfil()),
+      );
     }
   }
 
@@ -303,7 +302,7 @@ class InputNombres extends StatefulWidget {
 
 class _InputNombresState extends State<InputNombres> {
   final focusNode = FocusNode();
-  String? _apellidosErrorText;
+  String? _nombresErrorText;
 
   @override
   Widget build(BuildContext context) {
@@ -329,11 +328,11 @@ class _InputNombresState extends State<InputNombres> {
         focusedBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: TextColor.purple().color, width: 2),
         ),
-        errorText: _apellidosErrorText, //
+        errorText: _nombresErrorText, //
       ),
       onChanged: (value) {
         setState(() {
-          _apellidosErrorText = InputValidator.validateNombres(value);
+          _nombresErrorText = InputValidator.validateNombres(value);
         });
       },
     );
@@ -539,6 +538,9 @@ class _InputFNacimientoState extends State<InputFNacimiento> {
 
     return TextField(
       focusNode: focusNode,
+      onTapOutside: (event) {
+        focusNode.unfocus();
+      },
       controller: widget._fnacimientoController,
       style: TextStyle(
           color: TextColor.purple().color, fontSize: 18, fontFamily: 'Poppins'),
@@ -554,7 +556,10 @@ class _InputFNacimientoState extends State<InputFNacimiento> {
         focusedBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: TextColor.purple().color, width: 2),
         ),
-        errorText: _fnacimientoErrorText, // Agregar errorText
+        errorText: _fnacimientoErrorText,
+        hintText: 'dd/MM/aaaa',
+        hintStyle: const TextStyle(
+            color: Colors.grey, fontSize: 15, fontFamily: 'Poppins'),
       ),
       onChanged: (value) {
         setState(() {
