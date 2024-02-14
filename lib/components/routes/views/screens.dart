@@ -1,3 +1,5 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers, unused_element, library_private_types_in_public_api
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curfind/components/routes/views/screens/companie.dart';
 import 'package:curfind/components/routes/views/screens/history.dart';
@@ -53,6 +55,7 @@ class _ScreensState extends State<Screens> {
               ? WallpaperColor.purple().color
               : WallpaperColor.green().color;
 
+          // ignore: unused_local_variable
           String fotoUrl = '';
 
           Future<void> _getFotoUrl() async {
@@ -140,7 +143,7 @@ class _ScreensState extends State<Screens> {
 }
 
 class FotoPerfil extends StatefulWidget {
-  const FotoPerfil({Key? key, required this.uid, required this.color}) : super(key: key);
+  const FotoPerfil({super.key, required this.uid, required this.color});
 
   final String uid;
   final Color color;

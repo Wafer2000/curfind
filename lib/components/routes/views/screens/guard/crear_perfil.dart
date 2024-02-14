@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously, unused_local_variable, unused_field, unused_element, no_leading_underscores_for_local_identifiers, avoid_print
+// ignore_for_file: use_build_context_synchronously, unused_local_variable, unused_field, unused_element, no_leading_underscores_for_local_identifiers, avoid_print, unnecessary_null_comparison
 import 'dart:io';
 
 import 'package:animate_do/animate_do.dart';
@@ -8,7 +8,6 @@ import 'package:curfind/shared/prefe_users.dart';
 import 'package:curfind/style/global_colors.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:file_picker/file_picker.dart';
 
 class CrearPerfil extends StatefulWidget {
@@ -573,6 +572,7 @@ class _InputFotoPerfilState extends State<InputFotoPerfil> {
     if (result == null) return;
 
     if (result.files.single.path != null &&
+        // ignore: unnecessary_cast
         (result.files.single.path! as String).endsWith('.svg')) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -765,6 +765,7 @@ class _InputEncabezadoState extends State<InputEncabezado> {
     if (result == null) return;
 
     if (result.files.single.path != null &&
+        // ignore: unnecessary_cast
         (result.files.single.path! as String).endsWith('.svg')) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
