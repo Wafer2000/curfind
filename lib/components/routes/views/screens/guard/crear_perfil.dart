@@ -1,20 +1,15 @@
-// ignore_for_file: use_build_context_synchronously, unused_local_variable, unused_field
+// ignore_for_file: use_build_context_synchronously, unused_local_variable, unused_field, unused_element, no_leading_underscores_for_local_identifiers, avoid_print
 import 'dart:io';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curfind/components/routes/views/screens.dart';
-import 'package:curfind/components/routes/views/screens/guard/perfil.dart';
 import 'package:curfind/shared/prefe_users.dart';
 import 'package:curfind/style/global_colors.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:uuid/data.dart';
-import 'package:uuid/uuid.dart';
-import 'package:uuid/rng.dart';
+import 'package:file_picker/file_picker.dart';
 
 class CrearPerfil extends StatefulWidget {
   const CrearPerfil({super.key});
@@ -31,7 +26,7 @@ class _CrearPerfilState extends State<CrearPerfil> {
   Widget build(BuildContext context) {
     var prefs = PreferencesUser();
 
-    Color backColor = _isSwitched == true
+    Color backColor = _isSwitched == false
         ? WallpaperColor.purple().color
         : WallpaperColor.green().color;
 
@@ -500,13 +495,101 @@ class InputFotoPerfil extends StatefulWidget {
 class _InputFotoPerfilState extends State<InputFotoPerfil> {
   final focusNode = FocusNode();
   String imageUrl = '';
+  PlatformFile? pickedFile;
+  UploadTask? uploadTask;
+  var pref = PreferencesUser();
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _getImageUrl();
+  }
+
+  Future _getImageUrl() async {
+    final DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(pref.ultimateUid)
+        .get();
+    setState(() {
+      imageUrl = documentSnapshot['foto'];
+    });
+  }
+
+  Future uploadFile() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    final path = 'Fotos de Perfil/${pref.ultimateUid}/Foto de Perfil';
+    final file = File(pickedFile!.path!);
+    final ref = FirebaseStorage.instance.ref().child(path);
+
+    final metadata = SettableMetadata();
+
+    setState(() {
+      uploadTask = ref.putFile(file, metadata);
+    });
+
+    final snapshot = await uploadTask!.whenComplete(() {});
+
+    final urlDowload = await snapshot.ref.getDownloadURL();
+    print('Dowload link: $urlDowload');
+
+    if (urlDowload != null) {
+      final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+      final now = DateTime.now();
+      final hsubida = DateFormat('HH:mm:ss').format(now);
+      final fsubida = DateFormat('yyyy-MM-dd').format(now);
+      final result = FirebaseFirestore.instance
+          .collection('Users')
+          .doc(pref.ultimateUid)
+          .update(
+              {'hsubidaf': hsubida, 'fsubidaf': fsubida, 'foto': urlDowload});
+
+      if (result != null) {
+        Navigator.of(context).pop();
+        setState(() {
+          isLoading = false;
+        });
+      } else {
+        setState(() {
+          isLoading = true;
+        });
+        Future.delayed(const Duration(seconds: 1), () {
+          setState(() {
+            isLoading = false;
+          });
+        });
+      }
+    }
+    setState(() {
+      uploadTask = null;
+    });
+  }
+
+  Future selectFile() async {
+    final result = await FilePicker.platform.pickFiles();
+    if (result == null) return;
+
+    if (result.files.single.path != null &&
+        (result.files.single.path! as String).endsWith('.svg')) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('No se permiten archivos SVG'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      Navigator.of(context).pop();
+      return;
+    }
+
+    setState(() {
+      pickedFile = result.files.first;
+    });
+  }
 
   Future<void> _uploadImage([DocumentSnapshot? documentSnapshot]) async {
-    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-    var pref = PreferencesUser();
-    final now = DateTime.now();
-    final hsubida = DateFormat('HH:mm:ss').format(now);
-    final fsubida = DateFormat('yyyy-MM-dd').format(now);
     await showModalBottomSheet(
         isScrollControlled: true,
         context: context,
@@ -517,76 +600,42 @@ class _InputFotoPerfilState extends State<InputFotoPerfil> {
                 left: 20,
                 right: 20,
                 bottom: MediaQuery.of(ctx).viewInsets.bottom + 20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Stack(
               children: [
-                const Center(child: Text('Elije una foto de perfil')),
-                Center(
-                  child: IconButton(
-                      onPressed: () async {
-                        final file = await ImagePicker()
-                            .pickImage(source: ImageSource.gallery);
-                        if (file == null) return;
-                        String fileName =
-                            DateTime.now().microsecondsSinceEpoch.toString();
-                        Reference referenceRoot =
-                            FirebaseStorage.instance.ref();
-                        Reference referenceDireImages =
-                            referenceRoot.child('Fotos de Perfil');
-                        Reference referenceImageaToUpload =
-                            referenceDireImages.child(fileName);
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return const AlertDialog(
-                              title: Text('Subiendo imagen'),
-                              content: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  CircularProgressIndicator(),
-                                  SizedBox(height: 16),
-                                  Text(
-                                    'Espere mientras subimos su imagen.',
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                ],
-                              ),
-                            );
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Center(child: Text('Elije una foto de perfil')),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Center(
+                      child: IconButton(
+                          onPressed: () async {
+                            selectFile();
                           },
-                        );
-                        try {
-                          await referenceImageaToUpload
-                              .putFile(File(file.path));
-                          final imageUrl =
-                              await referenceImageaToUpload.getDownloadURL();
-                          Navigator.pop(context);
-                          // Hacer algo con la URL de la imagen
-                        } catch (error) {
-                          Navigator.pop(context);
-                          // Manejar el error
-                        }
+                          icon: const Icon(Icons.camera_alt)),
+                    ),
+                    Center(
+                        child: ElevatedButton(
+                      onPressed: () async {
+                        uploadFile();
                       },
-                      icon: const Icon(Icons.camera_alt)),
+                      child: const Text('Guardar'),
+                    )),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                  ],
                 ),
-                Center(
-                    child: ElevatedButton(
-                  onPressed: () async {
-                    FirebaseFirestore.instance
-                        .collection('Users')
-                        .doc(pref.ultimateUid)
-                        .update({
-                      'hsubidaf': hsubida,
-                      'fsubidaf': fsubida,
-                      'foto': imageUrl
-                    });
-                    Navigator.of(context).pop();
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text('Se subio correctamente la imagen'),
-                    ));
-                  },
-                  child: const Text('Guardar'),
-                ))
+                if (isLoading)
+                  Container(
+                    color: Colors.black.withOpacity(0.5),
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
               ],
             ),
           );
@@ -608,10 +657,22 @@ class _InputFotoPerfilState extends State<InputFotoPerfil> {
           ),
         ),
         IconButton(
-          icon: const Icon(
-            Icons.account_circle,
-            size: 30,
-          ),
+          icon: pickedFile != null
+              ? CircleAvatar(
+                  backgroundImage: FileImage(File(pickedFile!.path!)),
+                  radius: 15,
+                )
+              : Image.network(
+                  imageUrl,
+                  width: 30,
+                  height: 30,
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Icon(
+                      Icons.account_circle,
+                      size: 30,
+                    );
+                  },
+                ),
           onPressed: () async {
             _uploadImage();
           },

@@ -49,7 +49,7 @@ class _PerfilState extends State<Perfil> {
     var prefs = PreferencesUser();
     print(prefs.ultimateUid);
 
-    Color backColor = _isSwitched == true
+    Color backColor = _isSwitched == false
         ? WallpaperColor.purple().color
         : WallpaperColor.green().color;
     return StreamBuilder<DocumentSnapshot>(

@@ -53,6 +53,24 @@ class _ScreensState extends State<Screens> {
               ? WallpaperColor.purple().color
               : WallpaperColor.green().color;
 
+          String fotoUrl = '';
+
+          Future<void> _getFotoUrl() async {
+            final DocumentSnapshot documentSnapshot = await _firestore
+                .collection('Users')
+                .doc(prefs.ultimateUid)
+                .get();
+            setState(() {
+              fotoUrl = documentSnapshot['foto'];
+            });
+          }
+
+          @override
+          void initState() {
+            super.initState();
+            _getFotoUrl();
+          }
+
           return Scaffold(
             body: IndexedStack(
               index: selectedIndex,
@@ -107,11 +125,7 @@ class _ScreensState extends State<Screens> {
                     label: '',
                     backgroundColor: backColor),
                 BottomNavigationBarItem(
-                    icon: const CircleAvatar(
-                      backgroundImage: AssetImage(
-                        'assets/photo_perfil.png',
-                      ),
-                    ),
+                    icon: FotoPerfil(uid: prefs.ultimateUid),
                     label: '',
                     backgroundColor: backColor)
               ],
@@ -120,5 +134,52 @@ class _ScreensState extends State<Screens> {
         });
 
     /**/
+  }
+}
+
+class FotoPerfil extends StatefulWidget {
+  const FotoPerfil({Key? key, required this.uid}) : super(key: key);
+
+  final String uid;
+
+  @override
+  _FotoPerfilState createState() => _FotoPerfilState();
+}
+
+class _FotoPerfilState extends State<FotoPerfil> {
+  String fotoUrl = '';
+  var prefs = PreferencesUser();
+
+  Future<void> _getFotoUrl() async {
+    final DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(widget.uid)
+        .get();
+    setState(() {
+      fotoUrl = documentSnapshot['foto'];
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getFotoUrl();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: Image.network(
+        fotoUrl,
+        width: 32.6,
+        height: 32.6,
+        errorBuilder: (context, error, stackTrace) {
+          return const CircleAvatar(
+            backgroundImage: AssetImage('assets/photo_perfil.png'),
+          );
+        },
+      ),
+    );
   }
 }

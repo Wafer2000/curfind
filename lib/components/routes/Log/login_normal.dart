@@ -177,7 +177,7 @@ class _InputsState extends State<Inputs> {
     } else if (uid != null) {
       pref.ultimateUid = uid;
 
-      FirebaseFirestore.instance.collection('Users').doc(uid).set({
+      FirebaseFirestore.instance.collection('Users').doc(uid).update({
         'hingreso': hingreso,
         'fingreso': fingreso,
       });

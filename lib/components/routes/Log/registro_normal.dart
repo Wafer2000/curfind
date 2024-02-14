@@ -192,6 +192,9 @@ class _InputsState extends State<Inputs> {
         'fnacimiento': fnacimiento,
         'hcreacion': hcreacion,
         'fcreacion': fcreacion,
+        'hsubidaf': '', 
+        'fsubidaf': '', 
+        'foto': ''
       });
 
       FirebaseFirestore.instance.collection('ColorEstado').doc(uid).set({
