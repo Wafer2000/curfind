@@ -160,9 +160,11 @@ class _FotoPerfilState extends State<FotoPerfil> {
     final DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
         .collection('Users')
         .doc(widget.uid)
+        .collection('ImagenesPerfil')
+        .doc(prefs.ultimateUid)
         .get();
     setState(() {
-      fotoUrl = documentSnapshot['foto'];
+      fotoUrl = documentSnapshot['FotoPerfil'];
     });
   }
 

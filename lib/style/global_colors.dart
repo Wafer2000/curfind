@@ -61,6 +61,22 @@ class TextColor {
     return const TextColor._(Color(0xFFF2FFF7));
   }
 
+  factory TextColor.green() {
+    return const TextColor._(Color(0xFF5FD15F));
+  }
+
+  factory TextColor.greenDark() {
+    return const TextColor._(Color(0xFF43A047));
+  }
+
+  factory TextColor.greenDarker() {
+    return const TextColor._(Color(0xFF2E7D32));
+  }
+
+  factory TextColor.purplelight() {
+    return const TextColor._(Color(0xFFF8F4FF));
+  }
+
   factory TextColor.purple() {
     return const TextColor._(Color(0xFF9880C6));
   }
@@ -73,4 +89,3 @@ class TextColor {
     return const TextColor._(Color(0xFF9855E3));
   }
 }
-
