@@ -192,10 +192,20 @@ class _InputsState extends State<Inputs> {
         'fnacimiento': fnacimiento,
         'hcreacion': hcreacion,
         'fcreacion': fcreacion,
-        'hsubidaf': '', 
-        'fsubidaf': '', 
-        'foto': ''
       });
+
+      FirebaseFirestore.instance.collection('Users').doc(uid).collection('ImagenesPerfil').doc(uid).set({
+        'FotoPerfil': '',
+        'Emcabezado': '',
+        'Foto1': '',
+        'Foto2': '',
+        'Foto3': '',
+        'Foto4': '',
+        'Foto5': '',
+        'Foto6': '',
+        'Foto7': '', 
+      });
+
 
       FirebaseFirestore.instance.collection('ColorEstado').doc(uid).set({
         'Estado': true,

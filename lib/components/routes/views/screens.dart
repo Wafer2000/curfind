@@ -125,7 +125,9 @@ class _ScreensState extends State<Screens> {
                     label: '',
                     backgroundColor: backColor),
                 BottomNavigationBarItem(
-                    icon: FotoPerfil(uid: prefs.ultimateUid),
+                    icon: FotoPerfil(
+                      uid: prefs.ultimateUid, color: iconColor,
+                    ),
                     label: '',
                     backgroundColor: backColor)
               ],
@@ -138,9 +140,10 @@ class _ScreensState extends State<Screens> {
 }
 
 class FotoPerfil extends StatefulWidget {
-  const FotoPerfil({Key? key, required this.uid}) : super(key: key);
+  const FotoPerfil({Key? key, required this.uid, required this.color}) : super(key: key);
 
   final String uid;
+  final Color color;
 
   @override
   _FotoPerfilState createState() => _FotoPerfilState();
@@ -175,9 +178,11 @@ class _FotoPerfilState extends State<FotoPerfil> {
         width: 32.6,
         height: 32.6,
         errorBuilder: (context, error, stackTrace) {
-          return const CircleAvatar(
-            backgroundImage: AssetImage('assets/photo_perfil.png'),
-          );
+          return CircularProgressIndicator(
+              value: null,
+              strokeWidth: 5.0,
+              backgroundColor: Colors.grey[200],
+              valueColor: AlwaysStoppedAnimation<Color>(widget.color));
         },
       ),
     );

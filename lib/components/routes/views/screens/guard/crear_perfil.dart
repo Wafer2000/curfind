@@ -538,14 +538,14 @@ class _InputFotoPerfilState extends State<InputFotoPerfil> {
 
     if (urlDowload != null) {
       final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-      final now = DateTime.now();
-      final hsubida = DateFormat('HH:mm:ss').format(now);
-      final fsubida = DateFormat('yyyy-MM-dd').format(now);
-      final result = FirebaseFirestore.instance
+      final result = _firestore
           .collection('Users')
           .doc(pref.ultimateUid)
-          .update(
-              {'hsubidaf': hsubida, 'fsubidaf': fsubida, 'foto': urlDowload});
+          .collection('Imagenes')
+          .doc(pref.ultimateUid)
+          .update({
+            'FotoPerfil': urlDowload,
+          });
 
       if (result != null) {
         Navigator.of(context).pop();
@@ -586,7 +586,10 @@ class _InputFotoPerfilState extends State<InputFotoPerfil> {
 
     setState(() {
       pickedFile = result.files.first;
+      isLoading = true;
     });
+
+    uploadFile();
   }
 
   Future<void> _uploadImage([DocumentSnapshot? documentSnapshot]) async {
@@ -617,25 +620,207 @@ class _InputFotoPerfilState extends State<InputFotoPerfil> {
                           },
                           icon: const Icon(Icons.camera_alt)),
                     ),
-                    Center(
-                        child: ElevatedButton(
-                      onPressed: () async {
-                        uploadFile();
-                      },
-                      child: const Text('Guardar'),
-                    )),
+                    if (isLoading == true)
+                      Container(
+                        color: Colors.transparent,
+                        child: const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final inputsState = context.findAncestorStateOfType<_InputsState>()!;
+
+    return Row(
+      children: [
+        Text(
+          'Foto de Perfil:',
+          style: TextStyle(
+            color: TextColor.purple().color,
+            fontSize: 18,
+            fontFamily: 'Poppins',
+          ),
+        ),
+        IconButton(
+          icon: pickedFile != null
+              ? CircleAvatar(
+                  backgroundImage: FileImage(File(pickedFile!.path!)),
+                  radius: 15,
+                )
+              : Image.network(
+                  imageUrl,
+                  width: 30,
+                  height: 30,
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Icon(
+                      Icons.account_circle,
+                      size: 30,
+                    );
+                  },
+                ),
+          onPressed: () async {
+            _uploadImage();
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class InputEncabezado extends StatefulWidget {
+  const InputEncabezado({
+    super.key,
+  });
+
+  @override
+  State<InputEncabezado> createState() => _InputEncabezadoState();
+}
+
+class _InputEncabezadoState extends State<InputEncabezado> {
+  final focusNode = FocusNode();
+  String imageUrl = '';
+  PlatformFile? pickedFile;
+  UploadTask? uploadTask;
+  var pref = PreferencesUser();
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _getImageUrl();
+  }
+
+  Future _getImageUrl() async {
+    final DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(pref.ultimateUid)
+        .get();
+    setState(() {
+      imageUrl = documentSnapshot['foto'];
+    });
+  }
+
+  Future uploadFile() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    final path = 'Fotos de Perfil/${pref.ultimateUid}/Foto de Perfil';
+    final file = File(pickedFile!.path!);
+    final ref = FirebaseStorage.instance.ref().child(path);
+
+    final metadata = SettableMetadata();
+
+    setState(() {
+      uploadTask = ref.putFile(file, metadata);
+    });
+
+    final snapshot = await uploadTask!.whenComplete(() {});
+
+    final urlDowload = await snapshot.ref.getDownloadURL();
+    print('Dowload link: $urlDowload');
+
+    if (urlDowload != null) {
+      final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+      final result = _firestore
+          .collection('Users')
+          .doc(pref.ultimateUid)
+          .collection('Imagenes')
+          .doc(pref.ultimateUid)
+          .update({
+            'Emcabezado': urlDowload,
+          });
+
+      if (result != null) {
+        Navigator.of(context).pop();
+        setState(() {
+          isLoading = false;
+        });
+      } else {
+        setState(() {
+          isLoading = true;
+        });
+        Future.delayed(const Duration(seconds: 1), () {
+          setState(() {
+            isLoading = false;
+          });
+        });
+      }
+    }
+    setState(() {
+      uploadTask = null;
+    });
+  }
+
+  Future selectFile() async {
+    final result = await FilePicker.platform.pickFiles();
+    if (result == null) return;
+
+    if (result.files.single.path != null &&
+        (result.files.single.path! as String).endsWith('.svg')) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('No se permiten archivos SVG'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      Navigator.of(context).pop();
+      return;
+    }
+
+    setState(() {
+      pickedFile = result.files.first;
+      isLoading = true;
+    });
+
+    uploadFile();
+  }
+
+  Future<void> _uploadImage([DocumentSnapshot? documentSnapshot]) async {
+    await showModalBottomSheet(
+        isScrollControlled: true,
+        context: context,
+        builder: (BuildContext ctx) {
+          return Padding(
+            padding: EdgeInsets.only(
+                top: 20,
+                left: 20,
+                right: 20,
+                bottom: MediaQuery.of(ctx).viewInsets.bottom + 20),
+            child: Stack(
+              children: [
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Center(child: Text('Elije una foto de perfil')),
                     const SizedBox(
                       height: 5,
                     ),
+                    Center(
+                      child: IconButton(
+                          onPressed: () async {
+                            selectFile();
+                          },
+                          icon: const Icon(Icons.camera_alt)),
+                    ),
+                    if (isLoading == true)
+                      Container(
+                        color: Colors.transparent,
+                        child: const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
                   ],
                 ),
-                if (isLoading)
-                  Container(
-                    color: Colors.black.withOpacity(0.5),
-                    child: const Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  ),
               ],
             ),
           );
