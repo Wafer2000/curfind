@@ -129,7 +129,8 @@ class _ScreensState extends State<Screens> {
                     backgroundColor: backColor),
                 BottomNavigationBarItem(
                     icon: FotoPerfil(
-                      uid: prefs.ultimateUid, color: iconColor,
+                      uid: prefs.ultimateUid,
+                      color: iconColor,
                     ),
                     label: '',
                     backgroundColor: backColor)
@@ -184,10 +185,11 @@ class _FotoPerfilState extends State<FotoPerfil> {
         height: 32.6,
         errorBuilder: (context, error, stackTrace) {
           return CircularProgressIndicator(
-              value: null,
-              strokeWidth: 5.0,
-              backgroundColor: Colors.grey[200],
-              valueColor: AlwaysStoppedAnimation<Color>(widget.color));
+            value: null,
+            strokeWidth: 5.0,
+            backgroundColor: Colors.grey[200],
+            valueColor: AlwaysStoppedAnimation<Color>(widget.color),
+          );
         },
       ),
     );

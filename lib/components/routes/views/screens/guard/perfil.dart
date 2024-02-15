@@ -78,7 +78,7 @@ class _PerfilState extends State<Perfil> {
                 IconButton(
                   icon: const Icon(Icons.edit),
                   onPressed: () {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                           builder: (context) => const CrearPerfil()),
