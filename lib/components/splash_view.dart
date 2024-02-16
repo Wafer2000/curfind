@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:curfind/main.dart';
+import 'package:curfind/shared/prefe_users.dart';
 import 'package:curfind/style/global_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -13,9 +14,10 @@ class SplashView extends StatefulWidget {
 
 class _SplashViewState extends State<SplashView> {
   @override
-  void initState() {
+  void initState(){
     super.initState();
-    Timer(Duration(milliseconds: (336 * 20).round()), () {
+    Timer(Duration(milliseconds: (336 * 20).round()), () async {
+    await PreferencesUser.init();
       runApp(App());
     });
   }

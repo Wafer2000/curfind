@@ -10,6 +10,7 @@ import 'package:curfind/shared/prefe_users.dart';
 import 'package:curfind/style/global_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginNormal extends StatefulWidget {
   const LoginNormal({super.key});
@@ -170,6 +171,7 @@ class _InputsState extends State<Inputs> {
     final fingreso = DateFormat('yyyy-MM-dd').format(now);
 
     var uid = await AuthService().signInWithEmailAndPassword(email, password);
+    //final SharedPreferences sharedPreferences = 
     if (uid == 1) {
       showSnackBar(context, 'Error: El usuario no existe');
     } else if (uid == 2) {
@@ -459,7 +461,7 @@ class ChangePassword extends StatelessWidget {
           MaterialPageRoute(builder: (context) => const LoginNormal()),
         );
       },*/
-      child: const Text('Cambiar contraseña',
+      child: const Text('¿Olvidaste tu contraseña?',
           style: TextStyle(
             color: Color(0xFFF8F4FF),
             fontSize: 14,

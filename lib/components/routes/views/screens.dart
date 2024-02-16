@@ -11,6 +11,7 @@ import 'package:curfind/style/global_colors.dart';
 import 'package:flutter/material.dart';
 
 class Screens extends StatefulWidget {
+  static const String routname = 'Screens';
   const Screens({super.key});
 
   @override

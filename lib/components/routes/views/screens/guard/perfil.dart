@@ -35,6 +35,7 @@ class _PerfilState extends State<Perfil> {
         'fsalida': fsalida,
       });
       await FirebaseAuth.instance.signOut();
+      pref.ultimateUid = '';
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const LoginNormal()),
@@ -43,7 +44,6 @@ class _PerfilState extends State<Perfil> {
       print(e);
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
