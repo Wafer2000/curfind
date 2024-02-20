@@ -176,9 +176,9 @@ class _InputsState extends State<Inputs> {
     final fcreacion = DateFormat('yyyy-MM-dd').format(now);
 
     var uid = await AuthService().createAcount(email, password);
-    if (uid == 1) {
+    if (uid == 'weak-password') {
       showSnackBar(context, 'Error: La contraseña es muy corta');
-    } else if (uid == 2) {
+    } else if (uid == 'email-already-in-use') {
       showSnackBar(context, 'Error: La cuenta ya existe');
     } else if (uid != null) {
       pref.ultimateUid = uid;

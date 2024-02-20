@@ -29,6 +29,13 @@
             {
               "client_id": "683810352443-t0l2gvbs07mdo0akm8creprusm3n30v0.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "683810352443-jv7j9kpf6uqda5l0r92gnelpo81tf0g9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.curfind"
+              }
             }
           ]
         }
