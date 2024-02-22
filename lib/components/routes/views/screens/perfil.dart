@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously, avoid_print, unused_import, no_leading_underscores_for_local_identifiers, unused_local_variable, unused_field
 
+import 'dart:ui';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curfind/components/routes/Log/login_normal.dart';
 import 'package:curfind/components/routes/views/screens/guard/crear_perfil.dart';
@@ -50,7 +52,6 @@ class _PerfilState extends State<Perfil> {
   @override
   Widget build(BuildContext context) {
     var prefs = PreferencesUser();
-    print(prefs.ultimateUid);
 
     Color backColor = _isSwitched == false
         ? WallpaperColor.purple().color
@@ -70,24 +71,65 @@ class _PerfilState extends State<Perfil> {
           return Stack(
             children: [
               const Encabezado(),
-              Scaffold(
-                appBar: AppBar(
-                  backgroundColor: Colors.transparent,
-                  title: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+              Stack(
+                children: [
+                  Column(
                     children: [
-                      Expanded(
-                        child: Center(
-                          child: NombreCurfind(),
-                        ),
+                      const SizedBox(
+                        height: 150,
                       ),
+                      Center(
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: WallpaperColor.white().color,
+                              borderRadius: BorderRadius.circular(10.0)),
+                          width: 321.8,
+                          height: 433.2,
+                          child: Scaffold(
+                            backgroundColor: Colors.transparent,
+                            appBar: AppBar(
+                              backgroundColor: Colors.transparent,
+                            ),
+                          ),
+                        ),
+                      )
                     ],
                   ),
-                ),
-                body: const Center(
-                  child: Text('Perfil'),
-                ),
-                backgroundColor: Colors.transparent,
+                  Scaffold(
+                    appBar: /*AppBar(
+                      backgroundColor: Colors.transparent,
+                      title: const Center(child: NombreCurfind()),
+                    ),*/
+                    AppBar(
+                  title: const Text('Perfil'),
+                  actions: [
+                    IconButton(
+                      icon: const Icon(Icons.logout),
+                      onPressed: () {
+                        _signOut();
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.edit),
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const CrearPerfil()),
+                        );
+                      },
+                    ),
+                  ],),
+                    body: const Stack(
+                      children: [
+                        Align(
+                            alignment: Alignment.topCenter,
+                            child: FotoDePerfil())
+                      ],
+                    ),
+                    backgroundColor: Colors.transparent,
+                  ),
+                ],
               ),
             ],
           );
@@ -149,19 +191,90 @@ class _EncabezadoState extends State<Encabezado> {
               ? WallpaperColor.purple().color
               : WallpaperColor.green().color;
 
-          return Container(
-            alignment: Alignment.topCenter,
-            color: _backColor,
-            child: ClipRect(
-              child: Image.network(
-                _imageUrl,
-                fit: BoxFit.cover,
-                width: size.width * size.width,
-                height: 188.6,
+          return Stack(
+            children: [
+              Container(
+                alignment: Alignment.topCenter,
+                color: _backColor,
+                child: Image.network(
+                  _imageUrl,
+                  fit: BoxFit.cover,
+                  width: size.width * size.width,
+                  height: 188.6,
+                  errorBuilder: (context, error, stackTrace) {
+                    return CircularProgressIndicator(
+                      value: null,
+                      strokeWidth: 5.0,
+                      backgroundColor: Colors.grey[200],
+                      valueColor: AlwaysStoppedAnimation<Color>(_backColor),
+                    );
+                  },
+                ),
               ),
-            ),
+              BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 3, sigmaY: 0.5),
+                child: Container(
+                  alignment: Alignment.topCenter,
+                  color: Colors.transparent,
+                ),
+              ),
+            ],
           );
         });
+  }
+}
+
+class FotoDePerfil extends StatefulWidget {
+  const FotoDePerfil({
+    super.key,
+  });
+
+  @override
+  State<FotoDePerfil> createState() => _FotoDePerfilState();
+}
+
+class _FotoDePerfilState extends State<FotoDePerfil> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  String _imageUrl = '';
+  final _pref = PreferencesUser();
+
+  @override
+  void initState() {
+    super.initState();
+    _getImageUrl();
+  }
+
+  Future _getImageUrl() async {
+    final DocumentSnapshot _documentSnapshot = await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(_pref.ultimateUid)
+        .collection('ImagenesPerfil')
+        .doc(_pref.ultimateUid)
+        .get();
+
+    setState(() {
+      _imageUrl = _documentSnapshot['FotoPerfil'];
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var prefs = PreferencesUser();
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(100),
+      child: Image.network(
+        _imageUrl,
+        width: 121.8,
+        height: 121.8,
+        errorBuilder: (context, error, stackTrace) {
+          return const Icon(
+            Icons.account_circle,
+            size: 80,
+          );
+        },
+      ),
+    );
   }
 }
 

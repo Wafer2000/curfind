@@ -1537,39 +1537,41 @@ class _InputDescripcionState extends State<InputDescripcion> {
               ? WallpaperColor.purple().color
               : WallpaperColor.green().color;
 
-          return ListView(shrinkWrap: true, children: [
-            TextField(
-              focusNode: _focusNode,
-              onTapOutside: (event) {
-                _focusNode.unfocus();
-              },
-              controller: widget._descripcionController,
-              style: TextStyle(
-                  color: _textColor, fontSize: 18, fontFamily: 'Poppins'),
-              decoration: InputDecoration(
-                labelText: 'Descripcion',
-                labelStyle: TextStyle(
-                    color: _textColor, fontSize: 15, fontFamily: 'Poppins'),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                  borderSide: BorderSide(color: _textColor, width: 2),
+          return SizedBox(
+            child: ListView(shrinkWrap: true, children: [
+              TextField(
+                focusNode: _focusNode,
+                onTapOutside: (event) {
+                  _focusNode.unfocus();
+                },
+                controller: widget._descripcionController,
+                style: TextStyle(
+                    color: _textColor, fontSize: 18, fontFamily: 'Poppins'),
+                decoration: InputDecoration(
+                  labelText: 'Descripcion',
+                  labelStyle: TextStyle(
+                      color: _textColor, fontSize: 15, fontFamily: 'Poppins'),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                    borderSide: BorderSide(color: _textColor, width: 2),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                    borderSide: BorderSide(color: _textColor, width: 2),
+                  ),
+                  errorText: _descripcionErrorText,
                 ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                  borderSide: BorderSide(color: _textColor, width: 2),
-                ),
-                errorText: _descripcionErrorText,
+                onChanged: (value) {
+                  setState(() {
+                    _descripcionErrorText =
+                        InputValidator.validateDescripcion(value);
+                  });
+                },
+                maxLength: 50,
+                maxLines: null,
               ),
-              onChanged: (value) {
-                setState(() {
-                  _descripcionErrorText =
-                      InputValidator.validateDescripcion(value);
-                });
-              },
-              maxLength: 50,
-              maxLines: null,
-            ),
-          ]);
+            ]),
+          );
         });
   }
 }

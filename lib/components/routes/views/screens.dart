@@ -9,6 +9,7 @@ import 'package:curfind/components/routes/views/screens/menssages.dart';
 import 'package:curfind/shared/prefe_users.dart';
 import 'package:curfind/style/global_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class Screens extends StatefulWidget {
   static const String routname = 'Screens';
@@ -129,10 +130,7 @@ class _ScreensState extends State<Screens> {
                     label: '',
                     backgroundColor: backColor),*/
                 BottomNavigationBarItem(
-                    icon: FotoPerfil(
-                      uid: prefs.ultimateUid,
-                      color: iconColor,
-                    ),
+                    icon: const FotoPerfil(),
                     label: '',
                     backgroundColor: backColor)
               ],
@@ -145,23 +143,24 @@ class _ScreensState extends State<Screens> {
 }
 
 class FotoPerfil extends StatefulWidget {
-  const FotoPerfil({super.key, required this.uid, required this.color});
-
-  final String uid;
-  final Color color;
+  const FotoPerfil({
+    super.key,
+  });
 
   @override
   _FotoPerfilState createState() => _FotoPerfilState();
 }
 
 class _FotoPerfilState extends State<FotoPerfil> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   String fotoUrl = '';
   var prefs = PreferencesUser();
+  bool? _isSwitched;
 
   Future<void> _getFotoUrl() async {
     final DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
         .collection('Users')
-        .doc(widget.uid)
+        .doc(prefs.ultimateUid)
         .collection('ImagenesPerfil')
         .doc(prefs.ultimateUid)
         .get();
@@ -178,21 +177,38 @@ class _FotoPerfilState extends State<FotoPerfil> {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
-      child: Image.network(
-        fotoUrl,
-        width: 32.6,
-        height: 32.6,
-        errorBuilder: (context, error, stackTrace) {
-          return CircularProgressIndicator(
-            value: null,
-            strokeWidth: 5.0,
-            backgroundColor: Colors.grey[200],
-            valueColor: AlwaysStoppedAnimation<Color>(widget.color),
+    var prefs = PreferencesUser();
+
+    Color iconColor = _isSwitched == false
+        ? IconColor.purple().color
+        : IconColor.green().color;
+    return StreamBuilder<DocumentSnapshot>(
+        stream: _firestore
+            .collection('ColorEstado')
+            .doc(prefs.ultimateUid)
+            .snapshots(),
+        builder:
+            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          _isSwitched = snapshot.data?['Estado'];
+          iconColor = _isSwitched == true
+              ? IconColor.purple().color
+              : IconColor.green().color;
+          return ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Image.network(
+              fotoUrl,
+              width: 32.6,
+              height: 32.6,
+              errorBuilder: (context, error, stackTrace) {
+                return CircularProgressIndicator(
+                  value: null,
+                  strokeWidth: 5.0,
+                  backgroundColor: Colors.grey[200],
+                  valueColor: AlwaysStoppedAnimation<Color>(iconColor),
+                );
+              },
+            ),
           );
-        },
-      ),
-    );
+        });
   }
 }
