@@ -73,10 +73,6 @@ class TextColor {
     return const TextColor._(Color(0xFF2E7D32));
   }
 
-  factory TextColor.purplelight() {
-    return const TextColor._(Color(0xFFF8F4FF));
-  }
-
   factory TextColor.purple() {
     return const TextColor._(Color(0xFF9880C6));
   }

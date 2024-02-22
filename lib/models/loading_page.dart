@@ -1,6 +1,5 @@
-// ignore_for_file: use_build_context_synchronously, unnecessary_null_comparison, await_only_futures
+// ignore_for_file: use_build_context_synchronously, await_only_futures, unnecessary_null_comparison
 
-import 'dart:async';
 import 'package:curfind/components/routes/Log/splash_login.dart';
 import 'package:curfind/components/routes/views/screens.dart';
 import 'package:curfind/shared/prefe_users.dart';
@@ -8,15 +7,15 @@ import 'package:curfind/style/global_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
-class SplashView extends StatefulWidget {
-  static const String routname = 'SplashView';
-  const SplashView({super.key});
+class LoadingPage extends StatefulWidget {
+  static const String routname = 'LoadingPage';
+  const LoadingPage({super.key});
 
   @override
-  State<SplashView> createState() => _SplashViewState();
+  State<LoadingPage> createState() => _LoadingPageState();
 }
 
-class _SplashViewState extends State<SplashView> {
+class _LoadingPageState extends State<LoadingPage> {
   @override
   void initState() {
     super.initState();
@@ -38,14 +37,17 @@ class _SplashViewState extends State<SplashView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: WallpaperColor.purple().color,
-        body: Center(
+      backgroundColor: WallpaperColor.purple().color,
+      body: Center(
+        child: Transform.scale(
+          scale: 3,
           child: SizedBox(
-            width: 120,
-            height: 213.5,
-            child: Lottie.asset('assets/splash_curfind.json'),
+            child: Lottie.asset(
+              'assets/loading.json',
+            ),
           ),
         ),
-      );
+      ),
+    );
   }
 }

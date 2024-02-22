@@ -1,9 +1,9 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers, unused_element, library_private_types_in_public_api
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:curfind/components/routes/views/screens/companie.dart';
+//import 'package:curfind/components/routes/views/screens/companie.dart';
 import 'package:curfind/components/routes/views/screens/perfil.dart';
-import 'package:curfind/components/routes/views/screens/history.dart';
+//import 'package:curfind/components/routes/views/screens/history.dart';
 import 'package:curfind/components/routes/views/screens/home.dart';
 import 'package:curfind/components/routes/views/screens/menssages.dart';
 import 'package:curfind/shared/prefe_users.dart';
@@ -22,7 +22,7 @@ class _ScreensState extends State<Screens> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   bool? _isSwitched;
   var prefs = PreferencesUser();
-  int selectedIndex = 2;
+  int selectedIndex = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +35,9 @@ class _ScreensState extends State<Screens> {
 
     final screens = [
       const Messages(),
-      const History(),
+      //const History(),
       const Home(),
-      const Companie(),
+      //const Companie(),
       const Perfil()
     ];
 
@@ -102,7 +102,7 @@ class _ScreensState extends State<Screens> {
                   label: '',
                   backgroundColor: backColor,
                 ),
-                BottomNavigationBarItem(
+                /*BottomNavigationBarItem(
                     icon: Image.asset(
                       'assets/history.png',
                       width: 29.6,
@@ -110,7 +110,7 @@ class _ScreensState extends State<Screens> {
                       color: iconColor,
                     ),
                     label: '',
-                    backgroundColor: backColor),
+                    backgroundColor: backColor),*/
                 BottomNavigationBarItem(
                     icon: Image.asset(
                       'assets/logo_curfind.png',
@@ -119,7 +119,7 @@ class _ScreensState extends State<Screens> {
                     ),
                     label: '',
                     backgroundColor: backColor),
-                BottomNavigationBarItem(
+                /*BottomNavigationBarItem(
                     icon: Image.asset(
                       'assets/companie.png',
                       width: 29.6,
@@ -127,7 +127,7 @@ class _ScreensState extends State<Screens> {
                       color: iconColor,
                     ),
                     label: '',
-                    backgroundColor: backColor),
+                    backgroundColor: backColor),*/
                 BottomNavigationBarItem(
                     icon: FotoPerfil(
                       uid: prefs.ultimateUid,

@@ -4,8 +4,8 @@ import 'package:animate_do/animate_do.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curfind/components/routes/Log/registro_normal.dart';
 import 'package:curfind/components/routes/config/snackbar.dart';
-import 'package:curfind/components/routes/views/screens.dart';
 import 'package:curfind/firebase/firebase_auth.dart';
+import 'package:curfind/models/loading_page.dart';
 import 'package:curfind/shared/prefe_users.dart';
 import 'package:curfind/style/global_colors.dart';
 import 'package:flutter/material.dart';
@@ -169,9 +169,8 @@ class _InputsState extends State<Inputs> {
     final hingreso = DateFormat('HH:mm:ss').format(now);
     final fingreso = DateFormat('yyyy-MM-dd').format(now);
 
-    String? uid = await AuthService().signInWithEmailAndPassword(email, password);
-
-    
+    String? uid =
+        await AuthService().signInWithEmailAndPassword(email, password);
 
     if (uid == 'user-not-found') {
       showSnackBar(context, 'Error: El usuario no existe');
@@ -184,9 +183,9 @@ class _InputsState extends State<Inputs> {
         'hingreso': hingreso,
         'fingreso': fingreso,
       });
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const Screens()),
+
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const LoadingPage()),
       );
     }
   }

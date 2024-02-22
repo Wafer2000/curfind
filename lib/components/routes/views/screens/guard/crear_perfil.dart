@@ -9,6 +9,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 
+import 'nombre_curfind.dart';
+
 class CrearPerfil extends StatefulWidget {
   const CrearPerfil({super.key});
 
@@ -49,22 +51,34 @@ class _CrearPerfilState extends State<CrearPerfil> {
 
           return Stack(
             children: [
-              const NombreCurfind(),
+              //const NombreCurfind(),
               Scaffold(
-                resizeToAvoidBottomInset: true,
+                //resizeToAvoidBottomInset: true,
                 appBar: AppBar(
                   backgroundColor: Colors.transparent,
-                  leading: IconButton(
-                    icon: const Icon(Icons.exit_to_app),
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => const Screens()),
-                      );
-                    },
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.exit_to_app),
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const Screens()),
+                          );
+                        },
+                      ),
+                      const Expanded(
+                        child: Center(
+                          child: NombreCurfind(),
+                        ),
+                      ),
+                      const SizedBox(width: 48,)
+                    ],
                   ),
                 ),
-                backgroundColor: Colors.transparent,
+                backgroundColor: _backColor,
                 body: SingleChildScrollView(
                   child: Column(
                     children: [
@@ -92,70 +106,6 @@ class _CrearPerfilState extends State<CrearPerfil> {
                 ),
               ),
             ],
-          );
-        });
-  }
-}
-
-class NombreCurfind extends StatefulWidget {
-  const NombreCurfind({
-    super.key,
-  });
-
-  @override
-  State<NombreCurfind> createState() => _NombreCurfindState();
-}
-
-class _NombreCurfindState extends State<NombreCurfind> {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  bool? _isSwitched;
-
-  @override
-  Widget build(BuildContext context) {
-    var prefs = PreferencesUser();
-
-    Color _textColor = _isSwitched == true
-        ? TextColor.purple().color
-        : TextColor.green().color;
-    Color _backColor = _isSwitched == true
-        ? WallpaperColor.purple().color
-        : WallpaperColor.green().color;
-
-    return StreamBuilder<DocumentSnapshot>(
-        stream: _firestore
-            .collection('ColorEstado')
-            .doc(prefs.ultimateUid)
-            .snapshots(),
-        builder:
-            (BuildContext context, AsyncSnapshot<DocumentSnapshot> _snapshot) {
-          _isSwitched = _snapshot.data?['Estado'];
-
-          Color _textColor = _isSwitched == true
-              ? TextColor.purple().color
-              : TextColor.green().color;
-          Color _backColor = _isSwitched == true
-              ? WallpaperColor.purple().color
-              : WallpaperColor.green().color;
-
-          return Container(
-            color: _backColor,
-            child: Stack(children: [
-              FadeInUp(
-                child: Align(
-                    alignment: Alignment.topCenter,
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 25,),
-                        SizedBox(
-                            width: 200,
-                            child: Image.asset(
-                              'assets/nombre_curfind.png',
-                              color: _textColor,
-                            )),
-                      ],
-                    )),
-              ),
-            ]),
           );
         });
   }
@@ -261,9 +211,9 @@ class CustomInputs extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const InputFotoPerfil(),
-            const SizedBox(height: 10),
             const InputEncabezado(),
+            const SizedBox(height: 10),
+            const InputFotoPerfil(),
             const SizedBox(height: 10),
             const Center(
               child: Row(
@@ -777,6 +727,7 @@ class _InputEncabezadoState extends State<InputEncabezado> {
             ],
           );
         });
+  
   }
 }
 
