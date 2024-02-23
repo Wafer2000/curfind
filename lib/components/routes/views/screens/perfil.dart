@@ -24,6 +24,122 @@ class _PerfilState extends State<Perfil> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   bool? _isSwitched;
 
+  @override
+  Widget build(BuildContext context) {
+    var prefs = PreferencesUser();
+
+    Color backColor = _isSwitched == false
+        ? WallpaperColor.purple().color
+        : WallpaperColor.green().color;
+    return StreamBuilder<DocumentSnapshot>(
+        stream: _firestore
+            .collection('ColorEstado')
+            .doc(prefs.ultimateUid)
+            .snapshots(),
+        builder:
+            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          _isSwitched = snapshot.data?['Estado'];
+          backColor = _isSwitched == true
+              ? WallpaperColor.purple().color
+              : WallpaperColor.green().color;
+
+          return Stack(
+            children: [
+              const Encabezado(),
+              Scaffold(
+                backgroundColor: Colors.transparent,
+                appBar: AppBar(
+                  backgroundColor: Colors.transparent,
+                  title: const Center(child: NombreCurfind()),
+                ),
+                body: const Stack(
+                  alignment: AlignmentDirectional.center,
+                  children: [
+                    DatosPerfil(),
+                    Align(alignment: Alignment.topCenter, child: FotoDePerfil())
+                  ],
+                ),
+              ),
+            ],
+          );
+        });
+  }
+}
+
+class DatosPerfil extends StatefulWidget {
+  const DatosPerfil({
+    super.key,
+  });
+
+  @override
+  State<DatosPerfil> createState() => _DatosPerfilState();
+}
+
+class _DatosPerfilState extends State<DatosPerfil> {
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      children: [
+        SizedBox(
+          height: 60.9,
+        ),
+        DatosPersonales(),
+      ],
+    );
+  }
+}
+
+class DatosPersonales extends StatefulWidget {
+  const DatosPersonales({
+    super.key,
+  });
+
+  @override
+  State<DatosPersonales> createState() => _DatosPersonalesState();
+}
+
+class _DatosPersonalesState extends State<DatosPersonales> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  bool? _isSwitched;
+  String _nombres = '';
+  String _apellidos = '';
+  String _descripcion = '';
+  String _fNacimiento = '';
+  String _fotoi = '';
+  String _fotoc = '';
+  String _fotod = '';
+  final _pref = PreferencesUser();
+
+  @override
+  void initState() {
+    super.initState();
+    _getDocuments();
+  }
+
+  Future _getDocuments() async {
+    final DocumentSnapshot _documentSnapshot = await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(_pref.ultimateUid)
+        .get();
+    final DocumentSnapshot _fotosdocumentSnapshot = await FirebaseFirestore
+        .instance
+        .collection('Users')
+        .doc(_pref.ultimateUid)
+        .collection('ImagenesPerfil')
+        .doc(_pref.ultimateUid)
+        .get();
+
+    setState(() {
+      _nombres = _documentSnapshot['nombres'];
+      _apellidos = _documentSnapshot['apellidos'];
+      _descripcion = _documentSnapshot['descripcion'];
+      _fNacimiento = _documentSnapshot['fnacimiento'];
+      _fotoi = _fotosdocumentSnapshot['FotoIzquierda'];
+      _fotoc = _fotosdocumentSnapshot['FotoCentro'];
+      _fotod = _fotosdocumentSnapshot['FotoDerecha'];
+    });
+  }
+
   Future<void> _signOut() async {
     var pref = PreferencesUser();
     final now = DateTime.now();
@@ -49,89 +165,341 @@ class _PerfilState extends State<Perfil> {
     }
   }
 
+  void _openAnimatedDialog(
+      BuildContext context, Color iconColor, Color backColor) {
+    showGeneralDialog(
+        context: context,
+        barrierDismissible: true,
+        barrierLabel: '',
+        transitionDuration: const Duration(milliseconds: 100),
+        pageBuilder: (context, animation1, animation2) {
+          return Container();
+        },
+        transitionBuilder: (context, a1, a2, widget) {
+          return ScaleTransition(
+            scale: Tween<double>(begin: 0.5, end: 1.0).animate(a1),
+            child: FadeTransition(
+              opacity: Tween<double>(begin: 0.5, end: 1.0).animate(a1),
+              child: AlertDialog(
+                backgroundColor: backColor,
+                titleTextStyle: const TextStyle(
+                    fontFamily: 'Poppins', color: Colors.black, fontSize: 30),
+                title: Center(
+                    child: Text(
+                  'Configuraciones',
+                  style: TextStyle(color: iconColor),
+                )),
+                content: Container(
+                  alignment: Alignment.centerLeft,
+                  color: Colors.transparent,
+                  height: 200,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 8, horizontal: 16),
+                            decoration: BoxDecoration(
+                              color: iconColor,
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Modo Oscuro/Claro',
+                                  style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                                Icon(
+                                  Icons.keyboard_arrow_right,
+                                  size: 20,
+                                  color: Colors.white,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 8, horizontal: 16),
+                            decoration: BoxDecoration(
+                              color: iconColor,
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Contraseña y Seguridad',
+                                  style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                                Icon(
+                                  Icons.keyboard_arrow_right,
+                                  size: 20,
+                                  color: Colors.white,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 8, horizontal: 16),
+                            decoration: BoxDecoration(
+                              color: iconColor,
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Datos Personales',
+                                  style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                                Icon(
+                                  Icons.keyboard_arrow_right,
+                                  size: 20,
+                                  color: Colors.white,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 8, horizontal: 16),
+                            decoration: BoxDecoration(
+                              color: iconColor,
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Verificacion de Cuentas',
+                                  style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                                Icon(
+                                  Icons.keyboard_arrow_right,
+                                  size: 20,
+                                  color: Colors.white,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            _signOut();
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 8, horizontal: 16),
+                            decoration: BoxDecoration(
+                              color: iconColor,
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Cerrar Sesion',
+                                  style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                                Icon(
+                                  Icons.keyboard_arrow_right,
+                                  size: 20,
+                                  color: Colors.white,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                shape: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16.0),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            ),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
-    var prefs = PreferencesUser();
-
-    Color backColor = _isSwitched == false
+    Color iconColor = _isSwitched == true
+        ? IconColor.purpleLight().color
+        : IconColor.greenLight().color;
+    Color backColor = _isSwitched == true
         ? WallpaperColor.purple().color
         : WallpaperColor.green().color;
+
+    var _prefs = PreferencesUser();
+
     return StreamBuilder<DocumentSnapshot>(
         stream: _firestore
             .collection('ColorEstado')
-            .doc(prefs.ultimateUid)
+            .doc(_prefs.ultimateUid)
             .snapshots(),
         builder:
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           _isSwitched = snapshot.data?['Estado'];
+          iconColor = _isSwitched == true
+              ? IconColor.purpleLight().color
+              : IconColor.greenLight().color;
           backColor = _isSwitched == true
               ? WallpaperColor.purple().color
               : WallpaperColor.green().color;
 
-          return Stack(
-            children: [
-              const Encabezado(),
-              Stack(
-                children: [
-                  Column(
+          return Container(
+            decoration: BoxDecoration(
+                color: WallpaperColor.white().color,
+                borderRadius: BorderRadius.circular(30.0)),
+            width: 321.8,
+            height: 433.2,
+            child: Scaffold(
+              backgroundColor: Colors.transparent,
+              appBar: AppBar(
+                backgroundColor: Colors.transparent,
+                automaticallyImplyLeading: true,
+                flexibleSpace: SafeArea(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const SizedBox(
-                        height: 150,
-                      ),
-                      Center(
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: WallpaperColor.white().color,
-                              borderRadius: BorderRadius.circular(10.0)),
-                          width: 321.8,
-                          height: 433.2,
-                          child: Scaffold(
-                            backgroundColor: Colors.transparent,
-                            appBar: AppBar(
-                              backgroundColor: Colors.transparent,
-                            ),
-                          ),
+                      IconButton(
+                        icon: Image.asset(
+                          'assets/setting.png',
+                          width: 26.9,
+                          height: 26.9,
+                          color: iconColor,
                         ),
-                      )
+                        onPressed: () {
+                          _openAnimatedDialog(context, iconColor, backColor);
+                        },
+                      ),
+                      IconButton(
+                        icon: Image.asset(
+                          'assets/edit.png',
+                          width: 26.5,
+                          height: 26.9,
+                          color: iconColor,
+                        ),
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const CrearPerfil()),
+                          );
+                        },
+                      ),
                     ],
                   ),
-                  Scaffold(
-                    appBar: /*AppBar(
-                      backgroundColor: Colors.transparent,
-                      title: const Center(child: NombreCurfind()),
-                    ),*/
-                    AppBar(
-                  title: const Text('Perfil'),
-                  actions: [
-                    IconButton(
-                      icon: const Icon(Icons.logout),
-                      onPressed: () {
-                        _signOut();
-                      },
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.edit),
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const CrearPerfil()),
-                        );
-                      },
-                    ),
-                  ],),
-                    body: const Stack(
-                      children: [
-                        Align(
-                            alignment: Alignment.topCenter,
-                            child: FotoDePerfil())
-                      ],
-                    ),
-                    backgroundColor: Colors.transparent,
-                  ),
-                ],
+                ),
               ),
-            ],
+              body: Container(
+                alignment: Alignment.topCenter,
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 17,
+                    ),
+                    Text(
+                      '${_nombres.split(' ')[0]} ${_apellidos.split(' ')[0]}',
+                      style: TextStyle(
+                        color: TextColor.black().color,
+                        fontSize: 30.5,
+                        fontFamily: 'Poppins',
+                        //fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      color: TextColor.black().color,
+                      height: 2,
+                      width: 30.6,
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Expanded(
+                      child: SizedBox(
+                        width: 243.6,
+                        child: Text(
+                          _descripcion == ''
+                              ? 'Agrega una descripción, por favor'
+                              : _descripcion,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: TextColor.black().color,
+                            fontSize: 15.3,
+                            fontFamily: 'Poppins',
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    
+                  ],
+                ),
+              ),
+            ),
           );
         });
   }
@@ -268,34 +636,17 @@ class _FotoDePerfilState extends State<FotoDePerfil> {
         width: 121.8,
         height: 121.8,
         errorBuilder: (context, error, stackTrace) {
-          return const Icon(
-            Icons.account_circle,
-            size: 80,
+          return IconButton(
+            highlightColor: Colors.transparent,
+            onPressed: () {},
+            icon: Image.asset(
+              'assets/user.png',
+              width: 121.8,
+              height: 121.8,
+            ),
           );
         },
       ),
     );
   }
 }
-
-/*AppBar(
-                  title: const Text('Perfil'),
-                  actions: [
-                    IconButton(
-                      icon: const Icon(Icons.logout),
-                      onPressed: () {
-                        _signOut();
-                      },
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.edit),
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const CrearPerfil()),
-                        );
-                      },
-                    ),
-                  ],
-                )*/

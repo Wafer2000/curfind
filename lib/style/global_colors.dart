@@ -28,15 +28,23 @@ class IconColor {
   const IconColor._(this.color);
 
   factory IconColor.black() {
-    return const IconColor._(Color(0xFF000000));
+    return const IconColor._(Color(0xFF040606));
   }
 
   factory IconColor.white() {
     return const IconColor._(Color(0xFFFFFFFF));
   }
 
+  factory IconColor.greenLight() {
+    return const IconColor._(Color(0xFF90CDA1));
+  }
+
   factory IconColor.green() {
     return const IconColor._(Color(0xFF53D39A));
+  }
+
+  factory IconColor.purpleLight() {
+    return const IconColor._(Color(0xFF9880C6));
   }
 
   factory IconColor.purple() {

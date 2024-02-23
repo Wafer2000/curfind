@@ -74,7 +74,9 @@ class _CrearPerfilState extends State<CrearPerfil> {
                           child: NombreCurfind(),
                         ),
                       ),
-                      const SizedBox(width: 48,)
+                      const SizedBox(
+                        width: 48,
+                      )
                     ],
                   ),
                 ),
@@ -164,18 +166,12 @@ class _InputsState extends State<Inputs> {
       children: [
         CustomInputs(
           descripcionController: _descripcionController,
-          instagramController: _instagramController,
-          tiktokController: _tiktokController,
-          xController: _xController,
         ),
         const SizedBox(
           height: 40,
         ),
         ButtomGuardar(
           descripcionController: _descripcionController,
-          instagramController: _instagramController,
-          tiktokController: _tiktokController,
-          xController: _xController,
           onTap: () {
             _createAccount(context, _descripcionController,
                 _instagramController, _tiktokController, _xController);
@@ -190,18 +186,9 @@ class CustomInputs extends StatelessWidget {
   const CustomInputs({
     super.key,
     required TextEditingController descripcionController,
-    required TextEditingController instagramController,
-    required TextEditingController tiktokController,
-    required TextEditingController xController,
-  })  : _descripcionController = descripcionController,
-        _instagramController = instagramController,
-        _tiktokController = tiktokController,
-        _xController = xController;
+  })  : _descripcionController = descripcionController;
 
   final TextEditingController _descripcionController;
-  final TextEditingController _instagramController;
-  final TextEditingController _tiktokController;
-  final TextEditingController _xController;
 
   @override
   Widget build(BuildContext context) {
@@ -228,12 +215,6 @@ class CustomInputs extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             InputDescripcion(descripcionController: _descripcionController),
-            const SizedBox(height: 10),
-            InputInstagram(instagramController: _instagramController),
-            const SizedBox(height: 10),
-            InputTikTok(tiktokController: _tiktokController),
-            const SizedBox(height: 10),
-            InputX(xController: _xController),
           ],
         ),
       ),
@@ -727,7 +708,6 @@ class _InputEncabezadoState extends State<InputEncabezado> {
             ],
           );
         });
-  
   }
 }
 
@@ -1576,277 +1556,6 @@ class _InputDescripcionState extends State<InputDescripcion> {
   }
 }
 
-class InputInstagram extends StatefulWidget {
-  const InputInstagram({
-    required TextEditingController instagramController,
-    super.key,
-  }) : _instagramController = instagramController;
-
-  final TextEditingController _instagramController;
-
-  @override
-  State<InputInstagram> createState() => _InputInstagramState();
-}
-
-class _InputInstagramState extends State<InputInstagram> {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  bool? _isSwitched;
-  final _focusNode = FocusNode();
-  String? _instagramErrorText;
-
-  @override
-  Widget build(BuildContext context) {
-    final inputsState = context.findAncestorStateOfType<_InputsState>()!;
-    var prefs = PreferencesUser();
-
-    Color _textColor = _isSwitched == true
-        ? TextColor.purple().color
-        : TextColor.green().color;
-    Color _backColor = _isSwitched == true
-        ? WallpaperColor.purple().color
-        : WallpaperColor.green().color;
-
-    return StreamBuilder<DocumentSnapshot>(
-        stream: _firestore
-            .collection('ColorEstado')
-            .doc(prefs.ultimateUid)
-            .snapshots(),
-        builder:
-            (BuildContext context, AsyncSnapshot<DocumentSnapshot> _snapshot) {
-          _isSwitched = _snapshot.data?['Estado'];
-
-          Color _textColor = _isSwitched == true
-              ? TextColor.purple().color
-              : TextColor.green().color;
-          Color _backColor = _isSwitched == true
-              ? WallpaperColor.purple().color
-              : WallpaperColor.green().color;
-
-          return Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  focusNode: _focusNode,
-                  onTapOutside: (event) {
-                    _focusNode.unfocus();
-                  },
-                  controller: widget._instagramController,
-                  style: TextStyle(
-                      color: _textColor, fontSize: 18, fontFamily: 'Poppins'),
-                  decoration: InputDecoration(
-                    labelText: 'Instagram',
-                    labelStyle: TextStyle(
-                        color: _textColor, fontSize: 15, fontFamily: 'Poppins'),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(10.0)),
-                      borderSide: BorderSide(color: _textColor, width: 2),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(10.0)),
-                      borderSide: BorderSide(color: _textColor, width: 2),
-                    ),
-                    errorText: _instagramErrorText,
-                  ),
-                  onChanged: (value) {
-                    setState(() {
-                      _instagramErrorText =
-                          InputValidator.validateInstagram(value);
-                    });
-                  },
-                ),
-              ),
-              IconButton(
-                icon: Image.asset('assets/instagram_icon.png', height: 29.2),
-                onPressed: () {},
-              ),
-            ],
-          );
-        });
-  }
-}
-
-class InputTikTok extends StatefulWidget {
-  const InputTikTok({
-    required TextEditingController tiktokController,
-    super.key,
-  }) : _tiktokController = tiktokController;
-
-  final TextEditingController _tiktokController;
-
-  @override
-  State<InputTikTok> createState() => _InputTikTokState();
-}
-
-class _InputTikTokState extends State<InputTikTok> {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  bool? _isSwitched;
-  final _focusNode = FocusNode();
-  String? _tiktokErrorText;
-
-  @override
-  Widget build(BuildContext context) {
-    final inputsState = context.findAncestorStateOfType<_InputsState>()!;
-    var prefs = PreferencesUser();
-
-    Color _textColor = _isSwitched == true
-        ? TextColor.purple().color
-        : TextColor.green().color;
-    Color _backColor = _isSwitched == true
-        ? WallpaperColor.purple().color
-        : WallpaperColor.green().color;
-
-    return StreamBuilder<DocumentSnapshot>(
-        stream: _firestore
-            .collection('ColorEstado')
-            .doc(prefs.ultimateUid)
-            .snapshots(),
-        builder:
-            (BuildContext context, AsyncSnapshot<DocumentSnapshot> _snapshot) {
-          _isSwitched = _snapshot.data?['Estado'];
-
-          Color _textColor = _isSwitched == true
-              ? TextColor.purple().color
-              : TextColor.green().color;
-          Color _backColor = _isSwitched == true
-              ? WallpaperColor.purple().color
-              : WallpaperColor.green().color;
-
-          return Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  focusNode: _focusNode,
-                  onTapOutside: (event) {
-                    _focusNode.unfocus();
-                  },
-                  controller: widget._tiktokController,
-                  style: TextStyle(
-                      color: _textColor, fontSize: 18, fontFamily: 'Poppins'),
-                  decoration: InputDecoration(
-                    labelText: 'Tiktok',
-                    labelStyle: TextStyle(
-                        color: _textColor, fontSize: 15, fontFamily: 'Poppins'),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(10.0)),
-                      borderSide: BorderSide(color: _textColor, width: 2),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(10.0)),
-                      borderSide: BorderSide(color: _textColor, width: 2),
-                    ),
-                    errorText: _tiktokErrorText,
-                  ),
-                  onChanged: (value) {
-                    setState(() {
-                      _tiktokErrorText = InputValidator.validateTiktok(value);
-                    });
-                  },
-                ),
-              ),
-              IconButton(
-                icon: Image.asset('assets/tiktok_icon.png', height: 29.2),
-                onPressed: () {},
-              ),
-            ],
-          );
-        });
-  }
-}
-
-class InputX extends StatefulWidget {
-  const InputX({
-    required TextEditingController xController,
-    super.key,
-  }) : _xController = xController;
-
-  final TextEditingController _xController;
-
-  @override
-  State<InputX> createState() => _InputXState();
-}
-
-class _InputXState extends State<InputX> {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  bool? _isSwitched;
-  final _focusNode = FocusNode();
-  String? _xErrorText;
-
-  @override
-  Widget build(BuildContext context) {
-    final inputsState = context.findAncestorStateOfType<_InputsState>()!;
-    var prefs = PreferencesUser();
-
-    Color _textColor = _isSwitched == true
-        ? TextColor.purple().color
-        : TextColor.green().color;
-    Color _backColor = _isSwitched == true
-        ? WallpaperColor.purple().color
-        : WallpaperColor.green().color;
-
-    return StreamBuilder<DocumentSnapshot>(
-        stream: _firestore
-            .collection('ColorEstado')
-            .doc(prefs.ultimateUid)
-            .snapshots(),
-        builder:
-            (BuildContext context, AsyncSnapshot<DocumentSnapshot> _snapshot) {
-          _isSwitched = _snapshot.data?['Estado'];
-
-          Color _textColor = _isSwitched == true
-              ? TextColor.purple().color
-              : TextColor.green().color;
-          Color _backColor = _isSwitched == true
-              ? WallpaperColor.purple().color
-              : WallpaperColor.green().color;
-
-          return Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  focusNode: _focusNode,
-                  onTapOutside: (event) {
-                    _focusNode.unfocus();
-                  },
-                  controller: widget._xController,
-                  style: TextStyle(
-                      color: _textColor, fontSize: 18, fontFamily: 'Poppins'),
-                  decoration: InputDecoration(
-                    labelText: 'X',
-                    labelStyle: TextStyle(
-                        color: _textColor, fontSize: 15, fontFamily: 'Poppins'),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(10.0)),
-                      borderSide: BorderSide(color: _textColor, width: 2),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(10.0)),
-                      borderSide: BorderSide(color: _textColor, width: 2),
-                    ),
-                    errorText: _xErrorText,
-                  ),
-                  onChanged: (value) {
-                    setState(() {
-                      _xErrorText = InputValidator.validateX(value);
-                    });
-                  },
-                ),
-              ),
-              IconButton(
-                icon: Image.asset('assets/x_icon.png', height: 29.2),
-                onPressed: () {},
-              ),
-            ],
-          );
-        });
-  }
-}
-
 class InputValidator {
   static String? validateDescripcion(String value) {
     if (value.isEmpty) {
@@ -1856,46 +1565,16 @@ class InputValidator {
     }
     return null;
   }
-
-  static String? validateInstagram(String value) {
-    if (value.isEmpty) {
-      return 'Debe colocar un link, o sino descative la opcion';
-    }
-    return null;
-  }
-
-  static String? validateTiktok(String value) {
-    if (value.isEmpty) {
-      return 'Debe colocar un link, o sino descative la opcion';
-    }
-    return null;
-  }
-
-  static String? validateX(String value) {
-    if (value.isEmpty) {
-      return 'Debe colocar un link, o sino descative la opcion';
-    }
-    return null;
-  }
 }
 
 class ButtomGuardar extends StatefulWidget {
   const ButtomGuardar({
     super.key,
     required TextEditingController descripcionController,
-    required TextEditingController instagramController,
-    required TextEditingController tiktokController,
-    required TextEditingController xController,
     this.onTap,
-  })  : _descripcionController = descripcionController,
-        _instagramController = instagramController,
-        _tiktokController = tiktokController,
-        _xController = xController;
+  }) : _descripcionController = descripcionController;
 
   final TextEditingController _descripcionController;
-  final TextEditingController _instagramController;
-  final TextEditingController _tiktokController;
-  final TextEditingController _xController;
   final VoidCallback? onTap;
 
   @override

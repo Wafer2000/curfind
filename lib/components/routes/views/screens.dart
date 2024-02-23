@@ -200,11 +200,10 @@ class _FotoPerfilState extends State<FotoPerfil> {
               width: 32.6,
               height: 32.6,
               errorBuilder: (context, error, stackTrace) {
-                return CircularProgressIndicator(
-                  value: null,
-                  strokeWidth: 5.0,
-                  backgroundColor: Colors.grey[200],
-                  valueColor: AlwaysStoppedAnimation<Color>(iconColor),
+                return const Icon(
+                  Icons.account_circle,
+                  size: 32.6,
+                  color: Color(0xFFB3B3B3),
                 );
               },
             ),
