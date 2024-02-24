@@ -168,7 +168,7 @@ class _InputsState extends State<Inputs> {
     final apellidos = apellidosController.text;
     final email = emailController.text;
     final password = passwordController.text;
-    final fnacimiento = passwordController.text;
+    final fnacimiento = fnacimientoController.text;
 
     var pref = PreferencesUser();
     final now = DateTime.now();

@@ -9,7 +9,6 @@ import 'package:curfind/components/routes/views/screens/menssages.dart';
 import 'package:curfind/shared/prefe_users.dart';
 import 'package:curfind/style/global_colors.dart';
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 class Screens extends StatefulWidget {
   static const String routname = 'Screens';

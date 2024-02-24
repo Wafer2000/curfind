@@ -1,7 +1,9 @@
-// ignore_for_file: use_build_context_synchronously, avoid_print, unused_import, no_leading_underscores_for_local_identifiers, unused_local_variable, unused_field
+// ignore_for_file: use_build_context_synchronously, avoid_print, unused_import, no_leading_underscores_for_local_identifiers, unused_local_variable, unused_field, must_be_immutable
 
 import 'dart:ui';
 
+import 'package:carousel_slider/carousel_controller.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curfind/components/routes/Log/login_normal.dart';
 import 'package:curfind/components/routes/views/screens/guard/crear_perfil.dart';
@@ -109,6 +111,7 @@ class _DatosPersonalesState extends State<DatosPersonales> {
   String _fotoc = '';
   String _fotod = '';
   final _pref = PreferencesUser();
+  int _edadf = 0;
 
   @override
   void initState() {
@@ -129,6 +132,19 @@ class _DatosPersonalesState extends State<DatosPersonales> {
         .doc(_pref.ultimateUid)
         .get();
 
+    final DateFormat formatter = DateFormat('dd/MM/yyyy');
+    final DateTime fechaNacimiento =
+        formatter.parse(_documentSnapshot['fnacimiento']);
+    final DateTime now = DateTime.now();
+    final int years = now.year - fechaNacimiento.year;
+    int _edad;
+    if (now.month < fechaNacimiento.month ||
+        (now.month == fechaNacimiento.month && now.day < fechaNacimiento.day)) {
+      _edad = years - 1;
+    } else {
+      _edad = years;
+    }
+
     setState(() {
       _nombres = _documentSnapshot['nombres'];
       _apellidos = _documentSnapshot['apellidos'];
@@ -137,6 +153,7 @@ class _DatosPersonalesState extends State<DatosPersonales> {
       _fotoi = _fotosdocumentSnapshot['FotoIzquierda'];
       _fotoc = _fotosdocumentSnapshot['FotoCentro'];
       _fotod = _fotosdocumentSnapshot['FotoDerecha'];
+      _edadf = _edad;
     });
   }
 
@@ -389,6 +406,8 @@ class _DatosPersonalesState extends State<DatosPersonales> {
 
     var _prefs = PreferencesUser();
 
+    final fotos = [_fotoi, _fotoc, _fotod];
+
     return StreamBuilder<DocumentSnapshot>(
         stream: _firestore
             .collection('ColorEstado')
@@ -454,7 +473,7 @@ class _DatosPersonalesState extends State<DatosPersonales> {
                 child: Column(
                   children: [
                     const SizedBox(
-                      height: 17,
+                      height: 10,
                     ),
                     Text(
                       '${_nombres.split(' ')[0]} ${_apellidos.split(' ')[0]}',
@@ -466,7 +485,7 @@ class _DatosPersonalesState extends State<DatosPersonales> {
                       ),
                     ),
                     const SizedBox(
-                      height: 10,
+                      height: 8,
                     ),
                     Container(
                       color: TextColor.black().color,
@@ -476,32 +495,218 @@ class _DatosPersonalesState extends State<DatosPersonales> {
                     const SizedBox(
                       height: 5,
                     ),
-                    Expanded(
-                      child: SizedBox(
-                        width: 243.6,
-                        child: Text(
-                          _descripcion == ''
-                              ? 'Agrega una descripción, por favor'
-                              : _descripcion,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: TextColor.black().color,
-                            fontSize: 15.3,
-                            fontFamily: 'Poppins',
-                          ),
-                        ),
-                      ),
+                    SizedBox(
+                      width: 243.6,
+                      height: 40,
+                      child: _descripcion == ''
+                          ? const Text(
+                              'Agrega una descripción, por favor',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 15.3,
+                                  fontFamily: 'Poppins',
+                                  fontWeight: FontWeight.bold),
+                            )
+                          : Text(
+                              _descripcion,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: TextColor.black().color,
+                                fontSize: 15.3,
+                                fontFamily: 'Poppins',
+                              ),
+                            ),
                     ),
                     const SizedBox(
-                      height: 10,
+                      height: 2,
                     ),
-                    
+                    SizedBox(
+                      width: 243.6,
+                      height: 20,
+                      child: _edadf == 0
+                          ? const Text(
+                              'No es posible ver tu edad',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 22.3,
+                                  fontFamily: 'Poppins',
+                                  fontWeight: FontWeight.bold),
+                            )
+                          : Text(
+                              '${_edadf.toString()} Años',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: TextColor.black().color,
+                                  fontSize: 22.3,
+                                  fontFamily: 'Poppins',
+                                  fontWeight: FontWeight.w500),
+                            ),
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    CarouselImages(
+                      fotos: fotos,
+                      color: iconColor,
+                    ),
+                    /*Stack(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: SizedBox(
+                                width: 137,
+                                height: 205.6,
+                                child: Image.network(
+                                  _fotoi,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return const Icon(
+                                      Icons.person,
+                                      color: Colors.grey,
+                                      size: 100,
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: SizedBox(
+                                width: 137,
+                                height: 205.6,
+                                child: Image.network(
+                                  _fotod,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return const Icon(
+                                      Icons.person,
+                                      color: Colors.grey,
+                                      size: 100,
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Center(
+                          child: Column(
+                            children: [
+                              const SizedBox(height: 14,),
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: SizedBox(
+                                  width: 137,
+                                  height: 205.6,
+                                  child: Image.network(
+                                    _fotoc,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return const Icon(
+                                        Icons.person,
+                                        color: Colors.grey,
+                                        size: 100,
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    )*/
                   ],
                 ),
               ),
             ),
           );
         });
+  }
+}
+
+class CarouselImages extends StatefulWidget {
+  const CarouselImages({
+    super.key,
+    required this.fotos,
+    required this.color,
+  });
+  final Color color;
+  final List<String> fotos;
+
+  @override
+  State<CarouselImages> createState() => _CarouselImagesState();
+}
+
+class _CarouselImagesState extends State<CarouselImages> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(50),
+        child: Center(
+          child: CarouselSlider.builder(
+            options: CarouselOptions(
+                height: 224,
+                initialPage: 1,
+                viewportFraction: 0.5,
+                enlargeCenterPage: true,),
+            itemCount: widget.fotos.length,
+            itemBuilder: (context, index, realIndex) {
+              final _urlImage = widget.fotos[index];
+
+              return BuildImage(
+                urlImage: _urlImage,
+                index: index, color: widget.color,
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class BuildImage extends StatelessWidget {
+  String urlImage;
+  int index;
+  Color color;
+  BuildImage({
+    super.key,
+    required this.urlImage,
+    required this.index,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: color,
+                image: DecorationImage(
+                    image: NetworkImage(urlImage),
+                    fit: BoxFit.cover,
+                    onError: (Object exception, StackTrace? stackTrace) {
+                      print('Error al cargar la imagen: $exception');
+                    })),
+          ),
+        ),
+      ],
+    );
   }
 }
 

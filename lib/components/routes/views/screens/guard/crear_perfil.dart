@@ -186,7 +186,7 @@ class CustomInputs extends StatelessWidget {
   const CustomInputs({
     super.key,
     required TextEditingController descripcionController,
-  })  : _descripcionController = descripcionController;
+  }) : _descripcionController = descripcionController;
 
   final TextEditingController _descripcionController;
 
@@ -1488,6 +1488,26 @@ class _InputDescripcionState extends State<InputDescripcion> {
   String? _descripcionErrorText;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   bool? _isSwitched;
+  String _descripcion = '';
+  final _pref = PreferencesUser();
+
+  @override
+  void initState() {
+    super.initState();
+    _getDescription();
+  }
+
+  Future _getDescription() async {
+    final DocumentSnapshot _documentSnapshot = await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(_pref.ultimateUid)
+        .get();
+
+    setState(() {
+      _descripcion = _documentSnapshot['descripcion'];
+      widget._descripcionController.text = _descripcion;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
