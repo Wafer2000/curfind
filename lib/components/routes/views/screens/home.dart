@@ -287,7 +287,6 @@ class _FotoBPerfilState extends State<FotoBPerfil> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   String fotoUrl = '';
   var prefs = PreferencesUser();
-  bool? _isSwitched;
 
   @override
   void initState() {
@@ -310,10 +309,6 @@ class _FotoBPerfilState extends State<FotoBPerfil> {
   @override
   Widget build(BuildContext context) {
     var prefs = PreferencesUser();
-
-    Color iconColor = _isSwitched == false
-        ? IconColor.purple().color
-        : IconColor.green().color;
     return StreamBuilder<DocumentSnapshot>(
         stream: _firestore
             .collection('ColorEstado')
@@ -321,10 +316,6 @@ class _FotoBPerfilState extends State<FotoBPerfil> {
             .snapshots(),
         builder:
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-          _isSwitched = snapshot.data?['Estado'];
-          iconColor = _isSwitched == true
-              ? IconColor.purple().color
-              : IconColor.green().color;
           return ClipRRect(
             borderRadius: BorderRadius.circular(20),
             child: Image.network(
