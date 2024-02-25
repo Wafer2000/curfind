@@ -13,11 +13,27 @@ class WallpaperColor {
     return const WallpaperColor._(Color(0xFFFFFFFF));
   }
 
+  factory WallpaperColor.greenDark() {
+    return const WallpaperColor._(Color(0xFF6DFF6E));
+  }
+
   factory WallpaperColor.green() {
+    return const WallpaperColor._(Color(0xFFADEBC9));
+  }
+
+  factory WallpaperColor.greenLight() {
     return const WallpaperColor._(Color(0xFFF2FFF7));
   }
 
+  factory WallpaperColor.purpleDark() {
+    return const WallpaperColor._(Color(0xFFBD93BF));
+  }
+
   factory WallpaperColor.purple() {
+    return const WallpaperColor._(Color(0xFFE3CCF6));
+  }
+
+  factory WallpaperColor.purpleLight() {
     return const WallpaperColor._(Color(0xFFF8F4FF));
   }
 }
@@ -35,12 +51,20 @@ class IconColor {
     return const IconColor._(Color(0xFFFFFFFF));
   }
 
+  factory IconColor.greenSuperLight() {
+    return const IconColor._(Color(0xFFC7F8DD));
+  }
+
   factory IconColor.greenLight() {
     return const IconColor._(Color(0xFF90CDA1));
   }
 
   factory IconColor.green() {
     return const IconColor._(Color(0xFF53D39A));
+  }
+
+  factory IconColor.purpleSuperLight() {
+    return const IconColor._(Color(0xFFE3CCF6));
   }
 
   factory IconColor.purpleLight() {
@@ -70,7 +94,7 @@ class TextColor {
   }
 
   factory TextColor.green() {
-    return const TextColor._(Color(0xFF5FD15F));
+    return const TextColor._(Color(0xFF53D39A));
   }
 
   factory TextColor.greenDark() {

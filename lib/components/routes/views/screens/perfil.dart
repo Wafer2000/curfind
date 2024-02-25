@@ -31,8 +31,8 @@ class _PerfilState extends State<Perfil> {
     var prefs = PreferencesUser();
 
     Color backColor = _isSwitched == false
-        ? WallpaperColor.purple().color
-        : WallpaperColor.green().color;
+        ? WallpaperColor.purpleLight().color
+        : WallpaperColor.greenLight().color;
     return StreamBuilder<DocumentSnapshot>(
         stream: _firestore
             .collection('ColorEstado')
@@ -42,8 +42,8 @@ class _PerfilState extends State<Perfil> {
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           _isSwitched = snapshot.data?['Estado'];
           backColor = _isSwitched == true
-              ? WallpaperColor.purple().color
-              : WallpaperColor.green().color;
+              ? WallpaperColor.purpleLight().color
+              : WallpaperColor.greenLight().color;
 
           return Stack(
             children: [
@@ -51,6 +51,8 @@ class _PerfilState extends State<Perfil> {
               Scaffold(
                 backgroundColor: Colors.transparent,
                 appBar: AppBar(
+                  automaticallyImplyLeading: false,
+                  excludeHeaderSemantics: false,
                   backgroundColor: Colors.transparent,
                   title: const Center(child: NombreCurfind()),
                 ),
@@ -78,15 +80,566 @@ class DatosPerfil extends StatefulWidget {
 }
 
 class _DatosPerfilState extends State<DatosPerfil> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  bool? _isSwitched;
+
   @override
   Widget build(BuildContext context) {
-    return const Column(
-      children: [
-        SizedBox(
-          height: 60.9,
+    var prefs = PreferencesUser();
+
+    Color backColor = _isSwitched == false
+        ? WallpaperColor.purple().color
+        : WallpaperColor.green().color;
+    return StreamBuilder<DocumentSnapshot>(
+        stream: _firestore
+            .collection('ColorEstado')
+            .doc(prefs.ultimateUid)
+            .snapshots(),
+        builder:
+            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          _isSwitched = snapshot.data?['Estado'];
+          backColor = _isSwitched == true
+              ? WallpaperColor.purple().color
+              : WallpaperColor.green().color;
+
+          return Column(
+            children: [
+              const SizedBox(
+                height: 60.9,
+              ),
+              const DatosPersonales(),
+              const SizedBox(
+                height: 20,
+              ),
+              RedesPersonales(backColor: backColor),
+            ],
+          );
+        });
+  }
+}
+
+class RedesPersonales extends StatefulWidget {
+  const RedesPersonales({
+    super.key,
+    required this.backColor,
+  });
+
+  final Color backColor;
+
+  @override
+  State<RedesPersonales> createState() => _RedesPersonalesState();
+}
+
+class _RedesPersonalesState extends State<RedesPersonales> {
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
+        child: Container(
+          decoration: BoxDecoration(
+              color: widget.backColor,
+              borderRadius: BorderRadius.circular(30.0)),
+          width: double.maxFinite,
+          child: const Padding(
+            padding: EdgeInsets.all(10),
+            child: Column(
+              children: [
+                Instagram(),
+                SizedBox(
+                  height: 10,
+                ),
+                Snapchat(),
+                SizedBox(
+                  height: 10,
+                ),
+                TikTok(),
+                SizedBox(
+                  height: 10,
+                ),
+                X(),
+              ],
+            ),
+          ),
         ),
-        DatosPersonales(),
-      ],
+      ),
+    );
+  }
+}
+
+class Instagram extends StatefulWidget {
+  const Instagram({
+    super.key,
+  });
+
+  @override
+  State<Instagram> createState() => _InstagramState();
+}
+
+class _InstagramState extends State<Instagram> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  bool? _isSwitched;
+  final _pref = PreferencesUser();
+  String _cuenta = '';
+  String _token = '';
+  bool _verification = false;
+  double textSize = 15.9;
+
+  @override
+  void initState() {
+    super.initState();
+    _getDocuments();
+  }
+
+  Future _getDocuments() async {
+    final DocumentSnapshot _documentSnapshot = await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(_pref.ultimateUid)
+        .collection('Instagram')
+        .doc(_pref.ultimateUid)
+        .get();
+
+    setState(() {
+      _cuenta = _documentSnapshot['cuenta'];
+      _token = _documentSnapshot['token'];
+      _verification = _documentSnapshot['verification'];
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: IntrinsicWidth(
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(30.0),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 5,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(30.0),
+              onTap: () {
+                // Acción al presionar el botón
+              },
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 3, 0, 3),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Container(
+                        constraints: const BoxConstraints.tightFor(
+                            width: 32, height: 32),
+                        child: FittedBox(
+                          fit: BoxFit.contain,
+                          child: Image.asset(
+                            'assets/instagram_icon.png',
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: FittedBox(
+                        fit: BoxFit.fitWidth,
+                        child: Text(
+                          'INSTAGRAM',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400,
+                            fontSize: textSize,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        constraints: const BoxConstraints.tightFor(
+                            width: 32, height: 32),
+                        child: FittedBox(
+                          fit: BoxFit.contain,
+                          child: Image.asset(
+                            'assets/instagram_icon.png',
+                            color: Colors.transparent,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class Snapchat extends StatefulWidget {
+  const Snapchat({
+    super.key,
+  });
+
+  @override
+  State<Snapchat> createState() => _SnapchatState();
+}
+
+class _SnapchatState extends State<Snapchat> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  bool? _isSwitched;
+  final _pref = PreferencesUser();
+  String _cuenta = '';
+  String _token = '';
+  bool _verification = false;
+  double textSize = 15.9;
+
+  @override
+  void initState() {
+    super.initState();
+    _getDocuments();
+  }
+
+  Future _getDocuments() async {
+    final DocumentSnapshot _documentSnapshot = await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(_pref.ultimateUid)
+        .collection('Snapchat')
+        .doc(_pref.ultimateUid)
+        .get();
+
+    setState(() {
+      _cuenta = _documentSnapshot['cuenta'];
+      _token = _documentSnapshot['token'];
+      _verification = _documentSnapshot['verification'];
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: IntrinsicWidth(
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(30.0),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 5,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(30.0),
+              onTap: () {
+                // Acción al presionar el botón
+              },
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 3, 0, 3),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Container(
+                        constraints: const BoxConstraints.tightFor(
+                            width: 32, height: 32),
+                        child: FittedBox(
+                          fit: BoxFit.contain,
+                          child: Image.asset(
+                            'assets/snapchat_icon.png',
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: FittedBox(
+                        fit: BoxFit.fitWidth,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(3, 0, 3, 0),
+                          child: Text(
+                            'SNAPCHAT',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w400,
+                              fontSize: textSize,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        constraints: const BoxConstraints.tightFor(
+                            width: 32, height: 32),
+                        child: FittedBox(
+                          fit: BoxFit.contain,
+                          child: Image.asset(
+                            'assets/snapchat_icon.png',
+                            color: Colors.transparent,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class TikTok extends StatefulWidget {
+  const TikTok({
+    super.key,
+  });
+
+  @override
+  State<TikTok> createState() => _TikTokState();
+}
+
+class _TikTokState extends State<TikTok> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  bool? _isSwitched;
+  final _pref = PreferencesUser();
+  String _cuenta = '';
+  String _token = '';
+  bool _verification = false;
+  double textSize = 15.9;
+
+  @override
+  void initState() {
+    super.initState();
+    _getDocuments();
+  }
+
+  Future _getDocuments() async {
+    final DocumentSnapshot _documentSnapshot = await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(_pref.ultimateUid)
+        .collection('TikTok')
+        .doc(_pref.ultimateUid)
+        .get();
+
+    setState(() {
+      _cuenta = _documentSnapshot['cuenta'];
+      _token = _documentSnapshot['token'];
+      _verification = _documentSnapshot['verification'];
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: IntrinsicWidth(
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(30.0),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 5,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(30.0),
+              onTap: () {
+                // Acción al presionar el botón
+              },
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 3, 0, 3),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Container(
+                        constraints: const BoxConstraints.tightFor(
+                            width: 32, height: 32),
+                        child: FittedBox(
+                          fit: BoxFit.contain,
+                          child: Image.asset(
+                            'assets/tiktok_icon.png',
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: FittedBox(
+                        fit: BoxFit.fitWidth,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(14, 0, 14, 0),
+                          child: Text(
+                            'TIKTOK',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w400,
+                              fontSize: textSize,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        constraints: const BoxConstraints.tightFor(
+                            width: 32, height: 32),
+                        child: FittedBox(
+                          fit: BoxFit.contain,
+                          child: Image.asset(
+                            'assets/tiktok_icon.png',
+                            color: Colors.transparent,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class X extends StatefulWidget {
+  const X({
+    super.key,
+  });
+
+  @override
+  State<X> createState() => _XState();
+}
+
+class _XState extends State<X> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  bool? _isSwitched;
+  final _pref = PreferencesUser();
+  String _cuenta = '';
+  String _token = '';
+  bool _verification = false;
+  double textSize = 15.9;
+
+  @override
+  void initState() {
+    super.initState();
+    _getDocuments();
+  }
+
+  Future _getDocuments() async {
+    final DocumentSnapshot _documentSnapshot = await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(_pref.ultimateUid)
+        .collection('X')
+        .doc(_pref.ultimateUid)
+        .get();
+
+    setState(() {
+      _cuenta = _documentSnapshot['cuenta'];
+      _token = _documentSnapshot['token'];
+      _verification = _documentSnapshot['verification'];
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: IntrinsicWidth(
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(30.0),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 5,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(30.0),
+              onTap: () {
+                // Acción al presionar el botón
+              },
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 3, 0, 3),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Container(
+                        constraints: const BoxConstraints.tightFor(
+                            width: 32, height: 32),
+                        child: FittedBox(
+                          fit: BoxFit.contain,
+                          child: Image.asset(
+                            'assets/x_icon.png',
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: FittedBox(
+                        fit: BoxFit.fitWidth,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(33, 0, 33, 0),
+                          child: Text(
+                            'X',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w400,
+                              fontSize: textSize,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        constraints: const BoxConstraints.tightFor(
+                            width: 32, height: 32),
+                        child: FittedBox(
+                          fit: BoxFit.contain,
+                          child: Image.asset(
+                            'assets/x_icon.png',
+                            color: Colors.transparent,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -401,8 +954,8 @@ class _DatosPersonalesState extends State<DatosPersonales> {
         ? IconColor.purpleLight().color
         : IconColor.greenLight().color;
     Color backColor = _isSwitched == true
-        ? WallpaperColor.purple().color
-        : WallpaperColor.green().color;
+        ? WallpaperColor.purpleLight().color
+        : WallpaperColor.greenLight().color;
 
     var _prefs = PreferencesUser();
 
@@ -420,194 +973,176 @@ class _DatosPersonalesState extends State<DatosPersonales> {
               ? IconColor.purpleLight().color
               : IconColor.greenLight().color;
           backColor = _isSwitched == true
-              ? WallpaperColor.purple().color
-              : WallpaperColor.green().color;
+              ? WallpaperColor.purpleLight().color
+              : WallpaperColor.greenLight().color;
 
-          return Container(
-            decoration: BoxDecoration(
-                color: WallpaperColor.white().color,
-                borderRadius: BorderRadius.circular(30.0)),
-            width: 321.8,
-            height: 433.2,
-            child: Scaffold(
-              backgroundColor: Colors.transparent,
-              appBar: AppBar(
+          return Padding(
+            padding: const EdgeInsets.only(
+              left: 20,
+              right: 20,
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                  color: WallpaperColor.white().color,
+                  borderRadius: BorderRadius.circular(30.0)),
+              width: double.infinity,
+              height: 433.2,
+              child: Scaffold(
                 backgroundColor: Colors.transparent,
-                automaticallyImplyLeading: true,
-                flexibleSpace: SafeArea(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        icon: Image.asset(
-                          'assets/setting.png',
-                          width: 26.9,
-                          height: 26.9,
-                          color: iconColor,
+                appBar: AppBar(
+                  backgroundColor: Colors.transparent,
+                  excludeHeaderSemantics: false,
+                  automaticallyImplyLeading: false,
+                  flexibleSpace: SafeArea(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                          icon: Image.asset(
+                            'assets/setting.png',
+                            width: 26.9,
+                            height: 26.9,
+                            color: iconColor,
+                          ),
+                          onPressed: () {
+                            _openAnimatedDialog(context, iconColor, backColor);
+                          },
                         ),
-                        onPressed: () {
-                          _openAnimatedDialog(context, iconColor, backColor);
-                        },
-                      ),
-                      IconButton(
-                        icon: Image.asset(
-                          'assets/edit.png',
-                          width: 26.5,
-                          height: 26.9,
-                          color: iconColor,
+                        IconButton(
+                          icon: Image.asset(
+                            'assets/edit.png',
+                            width: 26.5,
+                            height: 26.9,
+                            color: iconColor,
+                          ),
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const CrearPerfil()),
+                            );
+                          },
                         ),
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const CrearPerfil()),
-                          );
-                        },
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              body: Container(
-                alignment: Alignment.topCenter,
-                child: Column(
-                  children: [
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      '${_nombres.split(' ')[0]} ${_apellidos.split(' ')[0]}',
-                      style: TextStyle(
-                        color: TextColor.black().color,
-                        fontSize: 30.5,
-                        fontFamily: 'Poppins',
-                        //fontWeight: FontWeight.w500,
+                body: Container(
+                  alignment: Alignment.topCenter,
+                  child: Column(
+                    children: [
+                      const SizedBox(
+                        height: 10,
                       ),
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    Container(
-                      color: TextColor.black().color,
-                      height: 2,
-                      width: 30.6,
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    SizedBox(
-                      width: 243.6,
-                      height: 40,
-                      child: _descripcion == ''
-                          ? const Text(
-                              'Agrega una descripción, por favor',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Colors.red,
+                      Text(
+                        '${_nombres.split(' ')[0]} ${_apellidos.split(' ')[0]}',
+                        style: TextStyle(
+                          color: TextColor.black().color,
+                          fontSize: 30.5,
+                          fontFamily: 'Poppins',
+                          //fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      Container(
+                        color: TextColor.black().color,
+                        height: 2,
+                        width: 30.6,
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      SizedBox(
+                        width: 243.6,
+                        height: 40,
+                        child: _descripcion == ''
+                            ? const Text(
+                                'Agrega una descripción, por favor',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 15.3,
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.bold),
+                              )
+                            : Text(
+                                _descripcion,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: TextColor.black().color,
                                   fontSize: 15.3,
                                   fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.bold),
-                            )
-                          : Text(
-                              _descripcion,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: TextColor.black().color,
-                                fontSize: 15.3,
-                                fontFamily: 'Poppins',
-                              ),
-                            ),
-                    ),
-                    const SizedBox(
-                      height: 2,
-                    ),
-                    SizedBox(
-                      width: 243.6,
-                      height: 20,
-                      child: _edadf == 0
-                          ? const Text(
-                              'No es posible ver tu edad',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Colors.red,
-                                  fontSize: 22.3,
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.bold),
-                            )
-                          : Text(
-                              '${_edadf.toString()} Años',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: TextColor.black().color,
-                                  fontSize: 22.3,
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.w500),
-                            ),
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    CarouselImages(
-                      fotos: fotos,
-                      color: iconColor,
-                    ),
-                    /*Stack(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: SizedBox(
-                                width: 137,
-                                height: 205.6,
-                                child: Image.network(
-                                  _fotoi,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return const Icon(
-                                      Icons.person,
-                                      color: Colors.grey,
-                                      size: 100,
-                                    );
-                                  },
                                 ),
                               ),
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: SizedBox(
-                                width: 137,
-                                height: 205.6,
-                                child: Image.network(
-                                  _fotod,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return const Icon(
-                                      Icons.person,
-                                      color: Colors.grey,
-                                      size: 100,
-                                    );
-                                  },
-                                ),
+                      ),
+                      const SizedBox(
+                        height: 2,
+                      ),
+                      SizedBox(
+                        width: 243.6,
+                        height: 20,
+                        child: _edadf == 0
+                            ? const Text(
+                                'No es posible ver tu edad',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 22.3,
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.bold),
+                              )
+                            : Text(
+                                '${_edadf.toString()} Años',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: TextColor.black().color,
+                                    fontSize: 22.3,
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.w500),
                               ),
-                            ),
-                          ],
-                        ),
-                        Center(
-                          child: Column(
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      CarouselImages(
+                        fotos: fotos,
+                        color: iconColor,
+                      ),
+                      /*Stack(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const SizedBox(height: 14,),
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
                                 child: SizedBox(
                                   width: 137,
                                   height: 205.6,
                                   child: Image.network(
-                                    _fotoc,
+                                    _fotoi,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return const Icon(
+                                        Icons.person,
+                                        color: Colors.grey,
+                                        size: 100,
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: SizedBox(
+                                  width: 137,
+                                  height: 205.6,
+                                  child: Image.network(
+                                    _fotod,
                                     fit: BoxFit.cover,
                                     errorBuilder: (context, error, stackTrace) {
                                       return const Icon(
@@ -621,10 +1156,35 @@ class _DatosPersonalesState extends State<DatosPersonales> {
                               ),
                             ],
                           ),
-                        ),
-                      ],
-                    )*/
-                  ],
+                          Center(
+                            child: Column(
+                              children: [
+                                const SizedBox(height: 14,),
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: SizedBox(
+                                    width: 137,
+                                    height: 205.6,
+                                    child: Image.network(
+                                      _fotoc,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (context, error, stackTrace) {
+                                        return const Icon(
+                                          Icons.person,
+                                          color: Colors.grey,
+                                          size: 100,
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      )*/
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -650,23 +1210,25 @@ class _CarouselImagesState extends State<CarouselImages> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(50),
         child: Center(
           child: CarouselSlider.builder(
             options: CarouselOptions(
-                height: 224,
-                initialPage: 1,
-                viewportFraction: 0.5,
-                enlargeCenterPage: true,),
+              height: 224,
+              initialPage: 1,
+              viewportFraction: 0.5,
+              enlargeCenterPage: true,
+            ),
             itemCount: widget.fotos.length,
             itemBuilder: (context, index, realIndex) {
               final _urlImage = widget.fotos[index];
 
               return BuildImage(
                 urlImage: _urlImage,
-                index: index, color: widget.color,
+                index: index,
+                color: widget.color,
               );
             },
           ),
@@ -731,7 +1293,7 @@ class _EncabezadoState extends State<Encabezado> {
     _getImageUrl();
   }
 
-  Future _getImageUrl() async {
+  Future<void> _getImageUrl() async {
     final DocumentSnapshot _documentSnapshot = await FirebaseFirestore.instance
         .collection('Users')
         .doc(_pref.ultimateUid)
@@ -748,9 +1310,10 @@ class _EncabezadoState extends State<Encabezado> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     var prefs = PreferencesUser();
+
     Color _backColor = _isSwitched == true
-        ? WallpaperColor.purple().color
-        : WallpaperColor.green().color;
+        ? WallpaperColor.purpleLight().color
+        : WallpaperColor.greenLight().color;
 
     return StreamBuilder<DocumentSnapshot>(
         stream: _firestore
@@ -761,29 +1324,35 @@ class _EncabezadoState extends State<Encabezado> {
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> _snapshot) {
           _isSwitched = _snapshot.data?['Estado'];
           Color _backColor = _isSwitched == true
-              ? WallpaperColor.purple().color
-              : WallpaperColor.green().color;
+              ? WallpaperColor.purpleLight().color
+              : WallpaperColor.greenLight().color;
 
           return Stack(
+            alignment: Alignment.center,
             children: [
-              Container(
-                alignment: Alignment.topCenter,
-                color: _backColor,
-                child: Image.network(
-                  _imageUrl,
-                  fit: BoxFit.cover,
-                  width: size.width * size.width,
-                  height: 188.6,
-                  errorBuilder: (context, error, stackTrace) {
-                    return CircularProgressIndicator(
-                      value: null,
-                      strokeWidth: 5.0,
-                      backgroundColor: Colors.grey[200],
-                      valueColor: AlwaysStoppedAnimation<Color>(_backColor),
-                    );
-                  },
-                ),
-              ),
+              _imageUrl == ''
+                  ? Container(
+                      alignment: Alignment.topCenter,
+                      color: _backColor,
+                      child: Image.asset(
+                        'assets/user.png',
+                        fit: BoxFit.cover,
+                        width: size.width * size.width,
+                        height: 188.6,
+                        errorBuilder: (context, error, stackTrace) {
+                          return const Icon(
+                            Icons.landscape,
+                            color: Colors.grey,
+                            size: 200,
+                          );
+                        },
+                      ),
+                    )
+                  : Container(
+                      alignment: Alignment.topCenter,
+                      color: _backColor,
+                      child: ImagenEncabezado(imageUrl: _imageUrl, size: size),
+                    ),
               BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 3, sigmaY: 0.5),
                 child: Container(
@@ -794,6 +1363,41 @@ class _EncabezadoState extends State<Encabezado> {
             ],
           );
         });
+  }
+}
+
+class ImagenEncabezado extends StatefulWidget {
+  const ImagenEncabezado({
+    super.key,
+    required String imageUrl,
+    required this.size,
+  }) : _imageUrl = imageUrl;
+
+  final String _imageUrl;
+  final Size size;
+
+  @override
+  State<ImagenEncabezado> createState() => _ImagenEncabezadoState();
+}
+
+class _ImagenEncabezadoState extends State<ImagenEncabezado> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.network(
+      widget._imageUrl,
+      fit: BoxFit.cover,
+      width: widget.size.width * widget.size.width,
+      height: 188.6,
+      errorBuilder: (context, error, stackTrace) {
+        return const Icon(
+          Icons.landscape,
+          color: Colors.grey,
+          size: 200,
+        );
+      },
+    );
   }
 }
 
@@ -828,6 +1432,11 @@ class _FotoDePerfilState extends State<FotoDePerfil> {
     setState(() {
       _imageUrl = _documentSnapshot['FotoPerfil'];
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override

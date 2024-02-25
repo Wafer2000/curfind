@@ -63,7 +63,7 @@ class Wave extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Container(
-      color: WallpaperColor.purple().color,
+      color: WallpaperColor.purpleLight().color,
       width: size.width,
       height: size.height,
       child: Stack(

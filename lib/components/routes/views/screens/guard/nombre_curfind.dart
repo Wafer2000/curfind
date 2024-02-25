@@ -25,9 +25,6 @@ class _NombreCurfindState extends State<NombreCurfind> {
     Color _textColor = _isSwitched == true
         ? TextColor.purple().color
         : TextColor.green().color;
-    Color _backColor = _isSwitched == true
-        ? WallpaperColor.purple().color
-        : WallpaperColor.green().color;
 
     return StreamBuilder<DocumentSnapshot>(
         stream: _firestore
@@ -41,9 +38,6 @@ class _NombreCurfindState extends State<NombreCurfind> {
           Color _textColor = _isSwitched == true
               ? TextColor.purple().color
               : TextColor.green().color;
-          Color _backColor = _isSwitched == true
-              ? WallpaperColor.purple().color
-              : WallpaperColor.green().color;
 
           return SizedBox(
               width: 127.7,

@@ -1,11 +1,11 @@
 import 'package:curfind/style/global_colors.dart';
 import 'package:flutter/material.dart';
 
-Color customColor = WallpaperColor.purple().color;
+Color customColor = WallpaperColor.purpleLight().color;
 
 List<Color> colorThemes = [
   customColor,
-  WallpaperColor.green().color,
+  WallpaperColor.greenLight().color,
   WallpaperColor.black().color,
   WallpaperColor.white().color
 ];

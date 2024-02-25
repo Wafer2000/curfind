@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:curfind/components/routes/views/screens/guard/nombre_curfind.dart';
 import 'package:curfind/shared/prefe_users.dart';
 import 'package:curfind/style/global_colors.dart';
 import 'package:flutter/material.dart';
@@ -16,10 +17,11 @@ class _MessagesState extends State<Messages> {
 
   @override
   Widget build(BuildContext context) {
-  var prefs = PreferencesUser();
+    var prefs = PreferencesUser();
     Color backColor = _isSwitched == true
-        ? WallpaperColor.purple().color
-        : WallpaperColor.green().color;
+        ? WallpaperColor.purpleLight().color
+        : WallpaperColor.greenLight().color;
+        
     return StreamBuilder<DocumentSnapshot>(
         stream: _firestore
             .collection('ColorEstado')
@@ -29,26 +31,45 @@ class _MessagesState extends State<Messages> {
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           _isSwitched = snapshot.data?['Estado'];
           backColor = _isSwitched == true
-              ? WallpaperColor.purple().color
-              : WallpaperColor.green().color;
+              ? WallpaperColor.purpleLight().color
+              : WallpaperColor.greenLight().color;
 
           return Scaffold(
             backgroundColor: backColor,
             appBar: AppBar(
               backgroundColor: Colors.transparent,
-              leading: const Padding(
-                padding: EdgeInsets.fromLTRB(14, 0, 0, 0),
-                child: Icon(
-                  Icons.search,
-                  size: 30,
-                ),
+              excludeHeaderSemantics: false,
+              automaticallyImplyLeading: false,
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    icon: const Icon(
+                      Icons.search,
+                      size: 30,
+                    ),
+                    color: TextColor.black().color,
+                    onPressed: () {
+                      // Acción al presionar el icono de notificaciones
+                    },
+                  ),
+                  const Expanded(
+                    child: Center(
+                      child: NombreCurfind(),
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.search,
+                      size: 30,
+                    ),
+                    color: Colors.transparent,
+                    onPressed: () {
+                      // Acción al presionar el icono de notificaciones
+                    },
+                  ),
+                ],
               ),
-              title: Image.asset(
-                'assets/nombre_curfind.png',
-                width: 127.7,
-                height: 53.4,
-              ),
-              centerTitle: true,
             ),
             body: const Center(
               child: Column(children: []),

@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously, unused_local_variable, unused_field, unused_element, no_leading_underscores_for_local_identifiers, avoid_print, unnecessary_null_comparison
+// ignore_for_file: use_build_context_synchronously, unused_local_variable, unused_field, unused_element, no_leading_underscores_for_local_identifiers, avoid_print, unnecessary_null_comparison, library_private_types_in_public_api
 import 'dart:io';
 import 'package:animate_do/animate_do.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -34,8 +34,8 @@ class _CrearPerfilState extends State<CrearPerfil> {
     var prefs = PreferencesUser();
 
     Color _backColor = _isSwitched == true
-        ? WallpaperColor.purple().color
-        : WallpaperColor.green().color;
+        ? WallpaperColor.purpleLight().color
+        : WallpaperColor.greenLight().color;
 
     return StreamBuilder<DocumentSnapshot>(
         stream: _firestore
@@ -46,8 +46,8 @@ class _CrearPerfilState extends State<CrearPerfil> {
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> _snapshot) {
           _isSwitched = _snapshot.data?['Estado'];
           _backColor = _isSwitched == true
-              ? WallpaperColor.purple().color
-              : WallpaperColor.green().color;
+              ? WallpaperColor.purpleLight().color
+              : WallpaperColor.greenLight().color;
 
           return Stack(
             children: [
@@ -56,6 +56,8 @@ class _CrearPerfilState extends State<CrearPerfil> {
                 //resizeToAvoidBottomInset: true,
                 appBar: AppBar(
                   backgroundColor: Colors.transparent,
+                  excludeHeaderSemantics: false,
+                  automaticallyImplyLeading: false,
                   title: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -117,7 +119,6 @@ class Inputs extends StatefulWidget {
   const Inputs({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _InputsState createState() => _InputsState();
 }
 
@@ -158,6 +159,11 @@ class _InputsState extends State<Inputs> {
       );
     }
   }
+
+    @override
+    void dispose() {
+      super.dispose();
+    }
 
   @override
   Widget build(BuildContext context) {
@@ -260,10 +266,13 @@ class _InputFotoPerfilState extends State<InputFotoPerfil> {
     });
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   Future uploadFile() async {
-    setState(() {
-      _isLoading = true;
-    });
+    setState(() {});
 
     final _path = 'Fotos de Perfil/${_pref.ultimateUid}/Foto de Perfil';
     final _file = File(_pickedFile!.path!);
@@ -335,7 +344,6 @@ class _InputFotoPerfilState extends State<InputFotoPerfil> {
 
     setState(() {
       _pickedFile = _result.files.first;
-      _isLoading = true;
     });
 
     uploadFile();
@@ -376,8 +384,8 @@ class _InputFotoPerfilState extends State<InputFotoPerfil> {
         ? TextColor.purple().color
         : TextColor.green().color;
     Color _backColor = _isSwitched == true
-        ? WallpaperColor.purple().color
-        : WallpaperColor.green().color;
+        ? WallpaperColor.purpleLight().color
+        : WallpaperColor.greenLight().color;
 
     return StreamBuilder<DocumentSnapshot>(
         stream: _firestore
@@ -392,8 +400,8 @@ class _InputFotoPerfilState extends State<InputFotoPerfil> {
               ? TextColor.purple().color
               : TextColor.green().color;
           Color _backColor = _isSwitched == true
-              ? WallpaperColor.purple().color
-              : WallpaperColor.green().color;
+              ? WallpaperColor.purpleLight().color
+              : WallpaperColor.greenLight().color;
 
           return Column(
             children: [
@@ -499,10 +507,13 @@ class _InputEncabezadoState extends State<InputEncabezado> {
     });
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   Future uploadFile() async {
-    setState(() {
-      _isLoading = true;
-    });
+    setState(() {});
 
     final _path = 'Fotos de Encabezado/${_pref.ultimateUid}/Foto de Encabezado';
     final _file = File(_pickedFile!.path!);
@@ -573,7 +584,6 @@ class _InputEncabezadoState extends State<InputEncabezado> {
 
     setState(() {
       _pickedFile = _result.files.first;
-      _isLoading = true;
     });
 
     uploadFile();
@@ -614,8 +624,8 @@ class _InputEncabezadoState extends State<InputEncabezado> {
         ? TextColor.purple().color
         : TextColor.green().color;
     Color _backColor = _isSwitched == true
-        ? WallpaperColor.purple().color
-        : WallpaperColor.green().color;
+        ? WallpaperColor.purpleLight().color
+        : WallpaperColor.greenLight().color;
 
     return StreamBuilder<DocumentSnapshot>(
         stream: _firestore
@@ -630,82 +640,77 @@ class _InputEncabezadoState extends State<InputEncabezado> {
               ? TextColor.purple().color
               : TextColor.green().color;
           Color _backColor = _isSwitched == true
-              ? WallpaperColor.purple().color
-              : WallpaperColor.green().color;
+              ? WallpaperColor.purpleLight().color
+              : WallpaperColor.greenLight().color;
 
-          return Column(
-            children: [
-              InkWell(
-                onTap: () async {
-                  _selectFile();
-                },
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    _pickedFile != null
-                        ? ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Container(
-                              width: 300,
-                              height: 188.6,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.rectangle,
-                                image: DecorationImage(
-                                  image: FileImage(File(_pickedFile!.path!)),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                          )
-                        : ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: SizedBox(
-                              width: 300,
-                              height: 188.6,
-                              child: Image.network(
-                                _imageUrl,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return const Icon(
-                                    Icons.landscape,
-                                    color: Colors.grey,
-                                    size: 200,
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                    Positioned(
-                      child: ClipRRect(
+          return InkWell(
+            onTap: () async {
+              _selectFile();
+            },
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                _pickedFile != null
+                    ? ClipRRect(
                         borderRadius: BorderRadius.circular(20),
                         child: Container(
                           width: 300,
                           height: 188.6,
                           decoration: BoxDecoration(
                             shape: BoxShape.rectangle,
-                            color: const Color.fromARGB(19, 70, 70, 70)
-                                .withOpacity(0.7),
+                            image: DecorationImage(
+                              image: FileImage(File(_pickedFile!.path!)),
+                              fit: BoxFit.cover,
+                            ),
                           ),
-                          child: IconButton(
-                            iconSize: 60,
-                            icon: Icon(
-                                _imageUrl != '' ? Icons.delete : Icons.edit),
-                            color: _textColor,
-                            onPressed: () {
-                              if (_imageUrl != '') {
-                                _deleteImage();
-                              } else {
-                                _selectFile();
-                              }
+                        ),
+                      )
+                    : ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: SizedBox(
+                          width: 300,
+                          height: 188.6,
+                          child: Image.network(
+                            _imageUrl,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Icon(
+                                Icons.landscape,
+                                color: Colors.grey,
+                                size: 200,
+                              );
                             },
                           ),
                         ),
                       ),
+                Positioned(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Container(
+                      width: 300,
+                      height: 188.6,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        color: const Color.fromARGB(19, 70, 70, 70)
+                            .withOpacity(0.7),
+                      ),
+                      child: IconButton(
+                        iconSize: 60,
+                        icon: Icon(_imageUrl != '' ? Icons.delete : Icons.edit),
+                        color: _textColor,
+                        onPressed: () {
+                          if (_imageUrl != '') {
+                            _deleteImage();
+                          } else {
+                            _selectFile();
+                          }
+                        },
+                      ),
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           );
         });
   }
@@ -728,7 +733,6 @@ class _InputFotoIzquierdaState extends State<InputFotoIzquierda> {
   PlatformFile? _pickedFile;
   UploadTask? _uploadTask;
   final _pref = PreferencesUser();
-  bool _isLoading = false;
 
   @override
   void initState() {
@@ -736,7 +740,7 @@ class _InputFotoIzquierdaState extends State<InputFotoIzquierda> {
     _getImageUrl();
   }
 
-  Future _getImageUrl() async {
+  Future<void> _getImageUrl() async {
     final DocumentSnapshot _documentSnapshot = await FirebaseFirestore.instance
         .collection('Users')
         .doc(_pref.ultimateUid)
@@ -749,11 +753,12 @@ class _InputFotoIzquierdaState extends State<InputFotoIzquierda> {
     });
   }
 
-  Future uploadFile() async {
-    setState(() {
-      _isLoading = true;
-    });
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
+  Future uploadFile() async {
     final _path = 'Fotos de Izquierda/${_pref.ultimateUid}/Foto de Izquierda';
     final _file = File(_pickedFile!.path!);
     final _ref = FirebaseStorage.instance.ref().child(_path);
@@ -785,14 +790,7 @@ class _InputFotoIzquierdaState extends State<InputFotoIzquierda> {
           content: Text('Se subio correctamente la imagen'),
           duration: Duration(seconds: 1),
         ));
-        setState(() {
-          _isLoading = false;
-          _imageUrl = _urlDowload;
-        });
-      } else {
-        setState(() {
-          _isLoading = true;
-        });
+        _imageUrl = _urlDowload;
       }
     }
     setState(() {
@@ -801,9 +799,6 @@ class _InputFotoIzquierdaState extends State<InputFotoIzquierda> {
   }
 
   Future _selectFile() async {
-    setState(() {
-      _isLoading = true;
-    });
     final _result = await FilePicker.platform.pickFiles();
     if (_result == null) return;
 
@@ -822,7 +817,6 @@ class _InputFotoIzquierdaState extends State<InputFotoIzquierda> {
 
     setState(() {
       _pickedFile = _result.files.first;
-      _isLoading = true;
     });
 
     uploadFile();
@@ -863,8 +857,8 @@ class _InputFotoIzquierdaState extends State<InputFotoIzquierda> {
         ? TextColor.purple().color
         : TextColor.green().color;
     Color _backColor = _isSwitched == true
-        ? WallpaperColor.purple().color
-        : WallpaperColor.green().color;
+        ? WallpaperColor.purpleLight().color
+        : WallpaperColor.greenLight().color;
 
     return StreamBuilder<DocumentSnapshot>(
         stream: _firestore
@@ -879,8 +873,8 @@ class _InputFotoIzquierdaState extends State<InputFotoIzquierda> {
               ? TextColor.purple().color
               : TextColor.green().color;
           Color _backColor = _isSwitched == true
-              ? WallpaperColor.purple().color
-              : WallpaperColor.green().color;
+              ? WallpaperColor.purpleLight().color
+              : WallpaperColor.greenLight().color;
 
           return Column(
             children: [
@@ -891,39 +885,24 @@ class _InputFotoIzquierdaState extends State<InputFotoIzquierda> {
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
-                    _pickedFile != null
-                        ? ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Container(
-                              width: 95,
-                              height: 170,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.rectangle,
-                                image: DecorationImage(
-                                  image: FileImage(File(_pickedFile!.path!)),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                          )
-                        : ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: SizedBox(
-                              width: 95,
-                              height: 170,
-                              child: Image.network(
-                                _imageUrl,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return const Icon(
-                                    Icons.person,
-                                    color: Colors.grey,
-                                    size: 100,
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: SizedBox(
+                        width: 95,
+                        height: 170,
+                        child: Image.network(
+                          _imageUrl,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Icon(
+                              Icons.person,
+                              color: Colors.grey,
+                              size: 100,
+                            );
+                          },
+                        ),
+                      ),
+                    ),
                     Positioned(
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(20),
@@ -935,28 +914,19 @@ class _InputFotoIzquierdaState extends State<InputFotoIzquierda> {
                             color: const Color.fromARGB(19, 70, 70, 70)
                                 .withOpacity(0.7),
                           ),
-                          child: _isLoading == true
-                              ? CircularProgressIndicator(
-                                  value: null,
-                                  strokeWidth: 5.0,
-                                  backgroundColor: Colors.grey[200],
-                                  valueColor:
-                                      AlwaysStoppedAnimation<Color>(_textColor),
-                                )
-                              : IconButton(
-                                  iconSize: 40,
-                                  icon: Icon(_imageUrl != ''
-                                      ? Icons.delete
-                                      : Icons.edit),
-                                  color: _textColor,
-                                  onPressed: () {
-                                    if (_imageUrl != '') {
-                                      _deleteImage();
-                                    } else {
-                                      _selectFile();
-                                    }
-                                  },
-                                ),
+                          child: IconButton(
+                            iconSize: 40,
+                            icon: Icon(
+                                _imageUrl != '' ? Icons.delete : Icons.edit),
+                            color: _textColor,
+                            onPressed: () {
+                              if (_imageUrl != '') {
+                                _deleteImage();
+                              } else {
+                                _selectFile();
+                              }
+                            },
+                          ),
                         ),
                       ),
                     ),
@@ -1008,9 +978,7 @@ class _InputFotoCentroState extends State<InputFotoCentro> {
   }
 
   Future uploadFile() async {
-    setState(() {
-      _isLoading = true;
-    });
+    setState(() {});
 
     final _path = 'Fotos de Centro/${_pref.ultimateUid}/Foto de Centro';
     final _file = File(_pickedFile!.path!);
@@ -1082,7 +1050,6 @@ class _InputFotoCentroState extends State<InputFotoCentro> {
 
     setState(() {
       _pickedFile = _result.files.first;
-      _isLoading = true;
     });
 
     uploadFile();
@@ -1115,6 +1082,11 @@ class _InputFotoCentroState extends State<InputFotoCentro> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final inputsState = context.findAncestorStateOfType<_InputsState>()!;
     var prefs = PreferencesUser();
@@ -1123,8 +1095,8 @@ class _InputFotoCentroState extends State<InputFotoCentro> {
         ? TextColor.purple().color
         : TextColor.green().color;
     Color _backColor = _isSwitched == true
-        ? WallpaperColor.purple().color
-        : WallpaperColor.green().color;
+        ? WallpaperColor.purpleLight().color
+        : WallpaperColor.greenLight().color;
 
     return StreamBuilder<DocumentSnapshot>(
         stream: _firestore
@@ -1139,8 +1111,8 @@ class _InputFotoCentroState extends State<InputFotoCentro> {
               ? TextColor.purple().color
               : TextColor.green().color;
           Color _backColor = _isSwitched == true
-              ? WallpaperColor.purple().color
-              : WallpaperColor.green().color;
+              ? WallpaperColor.purpleLight().color
+              : WallpaperColor.greenLight().color;
 
           return Column(
             children: [
@@ -1259,9 +1231,7 @@ class _InputFotoDerechaState extends State<InputFotoDerecha> {
   }
 
   Future uploadFile() async {
-    setState(() {
-      _isLoading = true;
-    });
+    setState(() {});
 
     final _path = 'Fotos de Derecha/${_pref.ultimateUid}/Foto de Derecha';
     final _file = File(_pickedFile!.path!);
@@ -1333,7 +1303,6 @@ class _InputFotoDerechaState extends State<InputFotoDerecha> {
 
     setState(() {
       _pickedFile = _result.files.first;
-      _isLoading = true;
     });
 
     uploadFile();
@@ -1366,6 +1335,11 @@ class _InputFotoDerechaState extends State<InputFotoDerecha> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final inputsState = context.findAncestorStateOfType<_InputsState>()!;
     var prefs = PreferencesUser();
@@ -1374,8 +1348,8 @@ class _InputFotoDerechaState extends State<InputFotoDerecha> {
         ? TextColor.purple().color
         : TextColor.green().color;
     Color _backColor = _isSwitched == true
-        ? WallpaperColor.purple().color
-        : WallpaperColor.green().color;
+        ? WallpaperColor.purpleLight().color
+        : WallpaperColor.greenLight().color;
 
     return StreamBuilder<DocumentSnapshot>(
         stream: _firestore
@@ -1390,8 +1364,8 @@ class _InputFotoDerechaState extends State<InputFotoDerecha> {
               ? TextColor.purple().color
               : TextColor.green().color;
           Color _backColor = _isSwitched == true
-              ? WallpaperColor.purple().color
-              : WallpaperColor.green().color;
+              ? WallpaperColor.purpleLight().color
+              : WallpaperColor.greenLight().color;
 
           return Column(
             children: [
@@ -1518,8 +1492,8 @@ class _InputDescripcionState extends State<InputDescripcion> {
         ? TextColor.purple().color
         : TextColor.green().color;
     Color _backColor = _isSwitched == true
-        ? WallpaperColor.purple().color
-        : WallpaperColor.green().color;
+        ? WallpaperColor.purpleLight().color
+        : WallpaperColor.greenLight().color;
 
     return StreamBuilder<DocumentSnapshot>(
         stream: _firestore
@@ -1534,8 +1508,8 @@ class _InputDescripcionState extends State<InputDescripcion> {
               ? TextColor.purple().color
               : TextColor.green().color;
           Color _backColor = _isSwitched == true
-              ? WallpaperColor.purple().color
-              : WallpaperColor.green().color;
+              ? WallpaperColor.purpleLight().color
+              : WallpaperColor.greenLight().color;
 
           return SizedBox(
             child: ListView(shrinkWrap: true, children: [
@@ -1613,8 +1587,8 @@ class _ButtomGuardarState extends State<ButtomGuardar> {
         ? TextColor.purple().color
         : TextColor.green().color;
     Color _backColor = _isSwitched == true
-        ? WallpaperColor.purple().color
-        : WallpaperColor.green().color;
+        ? WallpaperColor.purpleLight().color
+        : WallpaperColor.greenLight().color;
 
     return StreamBuilder<DocumentSnapshot>(
         stream: _firestore
@@ -1629,8 +1603,8 @@ class _ButtomGuardarState extends State<ButtomGuardar> {
               ? TextColor.purple().color
               : TextColor.green().color;
           Color _backColor = _isSwitched == true
-              ? WallpaperColor.purple().color
-              : WallpaperColor.green().color;
+              ? WallpaperColor.purpleLight().color
+              : WallpaperColor.greenLight().color;
 
           return Center(
             child: SizedBox(

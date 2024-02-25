@@ -63,7 +63,7 @@ class Wave extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Container(
-      color: WallpaperColor.purple().color,
+      color: WallpaperColor.purpleLight().color,
       width: size.width,
       height: size.height,
       child: Stack(
@@ -192,6 +192,7 @@ class _InputsState extends State<Inputs> {
         'fnacimiento': fnacimiento,
         'hcreacion': hcreacion,
         'fcreacion': fcreacion,
+        'descripcion': ''
       });
 
       FirebaseFirestore.instance.collection('Users').doc(uid).collection('ImagenesPerfil').doc(uid).set({
@@ -200,6 +201,30 @@ class _InputsState extends State<Inputs> {
         'FotoIzquierda': '',
         'FotoCentro': '',
         'FotoDerecha': '',
+      });
+
+      FirebaseFirestore.instance.collection('Users').doc(uid).collection('Instagram').doc(uid).set({
+        'token': '',
+        'verification': false,
+        'cuenta': '',
+      });
+
+      FirebaseFirestore.instance.collection('Users').doc(uid).collection('Snapchat').doc(uid).set({
+        'token': '',
+        'verification': false,
+        'cuenta': '',
+      });
+
+      FirebaseFirestore.instance.collection('Users').doc(uid).collection('TikTok').doc(uid).set({
+        'token': '',
+        'verification': false,
+        'cuenta': '',
+      });
+
+      FirebaseFirestore.instance.collection('Users').doc(uid).collection('X').doc(uid).set({
+        'token': '',
+        'verification': false,
+        'cuenta': '',
       });
 
 

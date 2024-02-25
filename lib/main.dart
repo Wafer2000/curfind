@@ -1,7 +1,6 @@
 // ignore_for_file: unnecessary_null_comparison
 import 'package:curfind/components/routes.dart';
 import 'package:curfind/firebase/firebase_options.dart';
-import 'package:curfind/models/loading_page.dart';
 import 'package:curfind/shared/prefe_users.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';

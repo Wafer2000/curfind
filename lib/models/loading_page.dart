@@ -37,7 +37,7 @@ class _LoadingPageState extends State<LoadingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: WallpaperColor.purple().color,
+      backgroundColor: WallpaperColor.purpleLight().color,
       body: Center(
         child: Transform.scale(
           scale: 3,

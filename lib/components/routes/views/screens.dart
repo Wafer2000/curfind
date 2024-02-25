@@ -1,4 +1,4 @@
-// ignore_for_file: no_leading_underscores_for_local_identifiers, unused_element, library_private_types_in_public_api
+// ignore_for_file: no_leading_underscores_for_local_identifiers, unused_element, library_private_types_in_public_api, unused_local_variable, duplicate_ignore
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 //import 'package:curfind/components/routes/views/screens/companie.dart';
@@ -30,8 +30,8 @@ class _ScreensState extends State<Screens> {
         ? IconColor.purple().color
         : IconColor.green().color;
     Color backColor = _isSwitched == true
-        ? WallpaperColor.purple().color
-        : WallpaperColor.green().color;
+        ? WallpaperColor.purpleLight().color
+        : WallpaperColor.greenLight().color;
 
     final screens = [
       const Messages(),
@@ -53,10 +53,8 @@ class _ScreensState extends State<Screens> {
               ? IconColor.purple().color
               : IconColor.green().color;
           backColor = _isSwitched == true
-              ? WallpaperColor.purple().color
-              : WallpaperColor.green().color;
-
-          // ignore: unused_local_variable
+              ? WallpaperColor.purpleLight().color
+              : WallpaperColor.greenLight().color;
           String fotoUrl = '';
 
           Future<void> _getFotoUrl() async {
@@ -156,6 +154,12 @@ class _FotoPerfilState extends State<FotoPerfil> {
   var prefs = PreferencesUser();
   bool? _isSwitched;
 
+  @override
+  void initState() {
+    super.initState();
+    _getFotoUrl();
+  }
+
   Future<void> _getFotoUrl() async {
     final DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
         .collection('Users')
@@ -166,12 +170,6 @@ class _FotoPerfilState extends State<FotoPerfil> {
     setState(() {
       fotoUrl = documentSnapshot['FotoPerfil'];
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _getFotoUrl();
   }
 
   @override

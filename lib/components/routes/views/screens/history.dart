@@ -18,8 +18,8 @@ class _HistoryState extends State<History> {
   Widget build(BuildContext context) {
   var prefs = PreferencesUser();
     Color backColor = _isSwitched == true
-        ? WallpaperColor.purple().color
-        : WallpaperColor.green().color;
+        ? WallpaperColor.purpleLight().color
+        : WallpaperColor.greenLight().color;
     return StreamBuilder<DocumentSnapshot>(
         stream: _firestore
             .collection('ColorEstado')
@@ -29,8 +29,8 @@ class _HistoryState extends State<History> {
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           _isSwitched = snapshot.data?['Estado'];
           backColor = _isSwitched == true
-              ? WallpaperColor.purple().color
-              : WallpaperColor.green().color;
+              ? WallpaperColor.purpleLight().color
+              : WallpaperColor.greenLight().color;
 
           return Scaffold(
             body: const Center(

@@ -15,7 +15,7 @@ class _SplashLoginState extends State<SplashLogin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: WallpaperColor.purple().color,
+      backgroundColor: WallpaperColor.purpleLight().color,
       body: const Stack(
         children: [
           SplashLogo(),
@@ -116,7 +116,7 @@ class BottomGoogle extends StatelessWidget {
           );*/
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: WallpaperColor.purple().color,
+          backgroundColor: WallpaperColor.purpleLight().color,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
           ),
@@ -160,7 +160,7 @@ class BottomApple extends StatelessWidget {
               fontFamily: 'Poppins',
             )),
         style: ElevatedButton.styleFrom(
-          backgroundColor: WallpaperColor.purple().color,
+          backgroundColor: WallpaperColor.purpleLight().color,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
           ),
