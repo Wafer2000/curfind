@@ -1,5 +1,7 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers, unused_element, library_private_types_in_public_api, unused_local_variable, duplicate_ignore
 
+import 'package:animate_do/animate_do.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 //import 'package:curfind/components/routes/views/screens/companie.dart';
 import 'package:curfind/components/routes/views/screens/perfil.dart';
@@ -74,9 +76,11 @@ class _ScreensState extends State<Screens> {
           }
 
           return Scaffold(
-            body: IndexedStack(
-              index: selectedIndex,
-              children: screens,
+            body: FadeIn(
+              child: IndexedStack(
+                  index: selectedIndex,
+                  children: screens,
+                ),
             ),
             bottomNavigationBar: BottomNavigationBar(
               currentIndex: selectedIndex,
@@ -134,8 +138,6 @@ class _ScreensState extends State<Screens> {
             ),
           );
         });
-
-    /**/
   }
 }
 
@@ -192,18 +194,30 @@ class _FotoPerfilState extends State<FotoPerfil> {
               : IconColor.green().color;
           return ClipRRect(
             borderRadius: BorderRadius.circular(20),
-            child: Image.network(
-              fotoUrl,
-              width: 32.6,
-              height: 32.6,
-              errorBuilder: (context, error, stackTrace) {
-                return const Icon(
-                  Icons.account_circle,
-                  size: 32.6,
-                  color: Color(0xFFB3B3B3),
-                );
-              },
+            child: prefs.photoPerfil == ''
+    ? CachedNetworkImage(
+        imageUrl: fotoUrl,
+        width: 32.6,
+        height: 32.6,
+        errorWidget: (context, url, error) => const Icon(
+              Icons.account_circle,
+              size: 32.6,
+              color: Color(0xFFB3B3B3),
             ),
+      )
+    : CachedNetworkImage(
+        imageUrl: prefs.photoPerfil,
+        width: 32.6,
+        height: 32.6,
+        placeholder: (context, url) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+        errorWidget: (context, url, error) => const Icon(
+              Icons.account_circle,
+              size: 32.6,
+              color: Color(0xFFB3B3B3),
+            ),
+      ),
           );
         });
   }

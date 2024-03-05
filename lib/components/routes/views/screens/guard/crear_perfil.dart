@@ -131,27 +131,19 @@ class _InputsState extends State<Inputs> {
   void _createAccount(
     BuildContext context,
     TextEditingController descripcionController,
-    TextEditingController instagramController,
-    TextEditingController tiktokController,
-    TextEditingController xController,
   ) async {
     final _descripcion = descripcionController.text;
-    final _instagram = instagramController.text;
-    final _tiktok = tiktokController.text;
-    final _x = xController.text;
 
     var _pref = PreferencesUser();
 
     if (_descripcion == null) {
     } else {
+      _pref.description = _descripcion;
       FirebaseFirestore.instance
           .collection('Users')
           .doc(_pref.ultimateUid)
           .update({
         'descripcion': _descripcion,
-        'instagram': _instagram,
-        'tiktok': _tiktok,
-        'x': _x,
       });
       Navigator.pushReplacement(
         context,
@@ -160,10 +152,10 @@ class _InputsState extends State<Inputs> {
     }
   }
 
-    @override
-    void dispose() {
-      super.dispose();
-    }
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -179,8 +171,7 @@ class _InputsState extends State<Inputs> {
         ButtomGuardar(
           descripcionController: _descripcionController,
           onTap: () {
-            _createAccount(context, _descripcionController,
-                _instagramController, _tiktokController, _xController);
+            _createAccount(context, _descripcionController);
           },
         ),
       ],
@@ -290,7 +281,8 @@ class _InputFotoPerfilState extends State<InputFotoPerfil> {
     print('Dowload link: $_urlDowload');
 
     if (_urlDowload != null) {
-      final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+      _pref.photoPerfil = _urlDowload;
+
       final _result = _firestore
           .collection('Users')
           .doc(_pref.ultimateUid)
@@ -531,7 +523,7 @@ class _InputEncabezadoState extends State<InputEncabezado> {
     print('Dowload link: $_urlDowload ');
 
     if (_urlDowload != null) {
-      final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+      _pref.photoEncabezado = _urlDowload;
       final _result = _firestore
           .collection('Users')
           .doc(_pref.ultimateUid)
@@ -775,7 +767,7 @@ class _InputFotoIzquierdaState extends State<InputFotoIzquierda> {
     print('Dowload link: $_urlDowload ');
 
     if (_urlDowload != null) {
-      final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+      _pref.photoLeft = _urlDowload;
       final _result = _firestore
           .collection('Users')
           .doc(_pref.ultimateUid)
@@ -996,7 +988,7 @@ class _InputFotoCentroState extends State<InputFotoCentro> {
     print('Dowload link: $_urlDowload ');
 
     if (_urlDowload != null) {
-      final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+      _pref.photoCenter = _urlDowload;
       final _result = _firestore
           .collection('Users')
           .doc(_pref.ultimateUid)
@@ -1249,7 +1241,7 @@ class _InputFotoDerechaState extends State<InputFotoDerecha> {
     print('Dowload link: $_urlDowload ');
 
     if (_urlDowload != null) {
-      final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+      _pref.photoRight = _urlDowload;
       final _result = _firestore
           .collection('Users')
           .doc(_pref.ultimateUid)

@@ -245,27 +245,7 @@ class _HomeState extends State<Home> {
                           width: double.maxFinite,
                         ),
                       ),
-                      const Center(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                            SizedBox(
-                              width: 1.5,
-                            ),
-                                FotoBPerfil(),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 80.9,
-                            ),
-                          ],
-                        ),
-                      ),
+                      const FotoBPerfil(),
                     ],
                   ),
                 ),
@@ -316,19 +296,39 @@ class _FotoBPerfilState extends State<FotoBPerfil> {
             .snapshots(),
         builder:
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-          return ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Image.network(
-              fotoUrl,
-              width: 39.8,
-              height: 39.8,
-              errorBuilder: (context, error, stackTrace) {
-                return const Icon(
-                  Icons.account_circle,
-                  size: 32.6,
-                  color: Color(0xFFB3B3B3),
-                );
-              },
+          return Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(
+                      width: 1.5,
+                    ),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Image.network(
+                        prefs.photoPerfil == '' ? fotoUrl: prefs.photoPerfil,
+                        width: 39.8,
+                        height: 39.8,
+                        errorBuilder: (context, error, stackTrace) {
+                          return const Icon(
+                            Icons.account_circle,
+                            size: 48,
+                            color: Color(0xFFB3B3B3),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 80.9,
+                ),
+              ],
             ),
           );
         });

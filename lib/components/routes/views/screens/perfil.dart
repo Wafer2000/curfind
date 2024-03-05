@@ -2,6 +2,7 @@
 
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -253,10 +254,10 @@ class _InstagramState extends State<Instagram> {
                           'INSTAGRAM',
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w400,
-                            fontSize: textSize,
-                          ),
+                              color: Colors.black,
+                              fontWeight: FontWeight.w400,
+                              fontSize: textSize,
+                              fontFamily: 'Poppins'),
                         ),
                       ),
                     ),
@@ -372,10 +373,10 @@ class _SnapchatState extends State<Snapchat> {
                             'SNAPCHAT',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w400,
-                              fontSize: textSize,
-                            ),
+                                color: Colors.black,
+                                fontWeight: FontWeight.w400,
+                                fontSize: textSize,
+                                fontFamily: 'Poppins'),
                           ),
                         ),
                       ),
@@ -492,10 +493,10 @@ class _TikTokState extends State<TikTok> {
                             'TIKTOK',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w400,
-                              fontSize: textSize,
-                            ),
+                                color: Colors.black,
+                                fontWeight: FontWeight.w400,
+                                fontSize: textSize,
+                                fontFamily: 'Poppins'),
                           ),
                         ),
                       ),
@@ -612,10 +613,10 @@ class _XState extends State<X> {
                             'X',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w400,
-                              fontSize: textSize,
-                            ),
+                                color: Colors.black,
+                                fontWeight: FontWeight.w400,
+                                fontSize: textSize,
+                                fontFamily: 'Poppins'),
                           ),
                         ),
                       ),
@@ -726,6 +727,12 @@ class _DatosPersonalesState extends State<DatosPersonales> {
       });
       await FirebaseAuth.instance.signOut();
       pref.ultimateUid = '';
+      pref.description = '';
+      pref.photoCenter = '';
+      pref.photoEncabezado = '';
+      pref.photoLeft = '';
+      pref.photoPerfil = '';
+      pref.photoRight = '';
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const LoginNormal()),
@@ -961,6 +968,8 @@ class _DatosPersonalesState extends State<DatosPersonales> {
 
     final fotos = [_fotoi, _fotoc, _fotod];
 
+    final pictures = [_pref.photoLeft, _pref.photoCenter, _pref.photoRight];
+
     return StreamBuilder<DocumentSnapshot>(
         stream: _firestore
             .collection('ColorEstado')
@@ -1016,7 +1025,7 @@ class _DatosPersonalesState extends State<DatosPersonales> {
                             color: iconColor,
                           ),
                           onPressed: () {
-                            Navigator.pushReplacement(
+                            Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => const CrearPerfil()),
@@ -1055,28 +1064,37 @@ class _DatosPersonalesState extends State<DatosPersonales> {
                         height: 5,
                       ),
                       SizedBox(
-                        width: 243.6,
-                        height: 40,
-                        child: _descripcion == ''
-                            ? const Text(
-                                'Agrega una descripción, por favor',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: Colors.red,
+                          width: 243.6,
+                          height: 40,
+                          child: _pref.description == ''
+                              ? _descripcion == ''
+                                  ? const Text(
+                                      'Agrega una descripción, por favor',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: Colors.red,
+                                          fontSize: 15.3,
+                                          fontFamily: 'Poppins',
+                                          fontWeight: FontWeight.bold),
+                                    )
+                                  : Text(
+                                      _descripcion,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: TextColor.black().color,
+                                        fontSize: 15.3,
+                                        fontFamily: 'Poppins',
+                                      ),
+                                    )
+                              : Text(
+                                  _pref.description,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: TextColor.black().color,
                                     fontSize: 15.3,
                                     fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.bold),
-                              )
-                            : Text(
-                                _descripcion,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: TextColor.black().color,
-                                  fontSize: 15.3,
-                                  fontFamily: 'Poppins',
-                                ),
-                              ),
-                      ),
+                                  ),
+                                )),
                       const SizedBox(
                         height: 2,
                       ),
@@ -1107,82 +1125,9 @@ class _DatosPersonalesState extends State<DatosPersonales> {
                         height: 15,
                       ),
                       CarouselImages(
-                        fotos: fotos,
+                        fotos: fotos.isNotEmpty ? fotos : pictures,
                         color: iconColor,
                       ),
-                      /*Stack(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: SizedBox(
-                                  width: 137,
-                                  height: 205.6,
-                                  child: Image.network(
-                                    _fotoi,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return const Icon(
-                                        Icons.person,
-                                        color: Colors.grey,
-                                        size: 100,
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: SizedBox(
-                                  width: 137,
-                                  height: 205.6,
-                                  child: Image.network(
-                                    _fotod,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return const Icon(
-                                        Icons.person,
-                                        color: Colors.grey,
-                                        size: 100,
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Center(
-                            child: Column(
-                              children: [
-                                const SizedBox(height: 14,),
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: SizedBox(
-                                    width: 137,
-                                    height: 205.6,
-                                    child: Image.network(
-                                      _fotoc,
-                                      fit: BoxFit.cover,
-                                      errorBuilder: (context, error, stackTrace) {
-                                        return const Icon(
-                                          Icons.person,
-                                          color: Colors.grey,
-                                          size: 100,
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      )*/
                     ],
                   ),
                 ),
@@ -1254,19 +1199,26 @@ class BuildImage extends StatelessWidget {
     return Stack(
       children: [
         Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: color,
-                image: DecorationImage(
-                    image: NetworkImage(urlImage),
-                    fit: BoxFit.cover,
-                    onError: (Object exception, StackTrace? stackTrace) {
-                      print('Error al cargar la imagen: $exception');
-                    })),
-          ),
-        ),
+            padding: const EdgeInsets.all(8.0),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: color,
+                    image: DecorationImage(
+                      image: CachedNetworkImageProvider(urlImage),
+                      fit: BoxFit.cover,
+                      onError: (Object exception, StackTrace? stackTrace) {
+                        print('Error al cargar la imagen: $exception');
+                      },
+                    ),
+                  ),
+                ),
+                if (urlImage == '') const CircularProgressIndicator(),
+              ],
+            )),
       ],
     );
   }
@@ -1351,7 +1303,11 @@ class _EncabezadoState extends State<Encabezado> {
                   : Container(
                       alignment: Alignment.topCenter,
                       color: _backColor,
-                      child: ImagenEncabezado(imageUrl: _imageUrl, size: size),
+                      child: ImagenEncabezado(
+                          imageUrl: prefs.photoEncabezado == ''
+                              ? _imageUrl
+                              : prefs.photoEncabezado,
+                          size: size),
                     ),
               BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 3, sigmaY: 0.5),
@@ -1446,7 +1402,7 @@ class _FotoDePerfilState extends State<FotoDePerfil> {
     return ClipRRect(
       borderRadius: BorderRadius.circular(100),
       child: Image.network(
-        _imageUrl,
+        prefs.photoPerfil == '' ? _imageUrl : prefs.photoPerfil,
         width: 121.8,
         height: 121.8,
         errorBuilder: (context, error, stackTrace) {

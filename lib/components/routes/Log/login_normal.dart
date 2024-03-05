@@ -177,7 +177,23 @@ class _InputsState extends State<Inputs> {
     } else if (uid == 'wrong-password') {
       showSnackBar(context, 'Error: Contraseña Incorrecta');
     } else if (uid != null) {
+      final DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+          .collection('Users')
+          .doc(uid)
+          .collection('ImagenesPerfil')
+          .doc(uid)
+          .get();
+
+      final DocumentSnapshot textSnapshot =
+          await FirebaseFirestore.instance.collection('Users').doc(uid).get();
+
       pref.ultimateUid = uid;
+      pref.description = textSnapshot['descripcion'];
+      pref.photoCenter = documentSnapshot['FotoCentro'];
+      pref.photoEncabezado = documentSnapshot['Encabezado'];
+      pref.photoLeft = documentSnapshot['FotoIzquierda'];
+      pref.photoPerfil = documentSnapshot['FotoPerfil'];
+      pref.photoRight = documentSnapshot['FotoDerecha'];
 
       FirebaseFirestore.instance.collection('Users').doc(uid).update({
         'hingreso': hingreso,

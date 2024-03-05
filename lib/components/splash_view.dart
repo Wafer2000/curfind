@@ -25,11 +25,15 @@ class _SplashViewState extends State<SplashView> {
       final uid = await prefs.ultimateUid;
       if (uid != null && uid != '') {
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) {return const Screens() ;}),
+          MaterialPageRoute(builder: (context) {
+            return const Screens();
+          }),
         );
       } else {
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) {return const SplashLogin() ;}),
+          MaterialPageRoute(builder: (context) {
+            return const SplashLogin();
+          }),
         );
       }
     });
@@ -38,14 +42,14 @@ class _SplashViewState extends State<SplashView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: WallpaperColor.purpleLight().color,
-        body: Center(
-          child: SizedBox(
-            width: 120,
-            height: 213.5,
-            child: Lottie.asset('assets/splash_curfind.json'),
-          ),
+      backgroundColor: WallpaperColor.purpleLight().color,
+      body: Center(
+        child: SizedBox(
+          width: 120,
+          height: 213.5,
+          child: Lottie.asset('assets/splash_curfind.json'),
         ),
-      );
+      ),
+    );
   }
 }

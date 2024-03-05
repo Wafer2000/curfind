@@ -14,19 +14,59 @@ class PreferencesUser {
     _prefs = await SharedPreferences.getInstance();
   }
 
-  String get ultimatePage {
-    return _prefs.getString('ultimatePage') ?? 'SplashLogin';
-  }
-
-  set ultimatePage(String value) {
-    _prefs.setString('ultimatePage', value);
-  }
-
   String get ultimateUid {
     return _prefs.getString('ultimateUid') ?? '';
   }
 
   set ultimateUid(String value) {
     _prefs.setString('ultimateUid', value);
+  }
+
+  String get photoPerfil {
+    return _prefs.getString('photoPerfil') ?? '';
+  }
+
+  set photoPerfil(String value) {
+    _prefs.setString('photoPerfil', value);
+  }
+
+  String get photoEncabezado {
+    return _prefs.getString('photoEncabezado') ?? '';
+  }
+
+  set photoEncabezado(String value) {
+    _prefs.setString('photoEncabezado', value);
+  }
+
+  String get photoLeft {
+    return _prefs.getString('photoLeft') ?? '';
+  }
+
+  set photoLeft(String value) {
+    _prefs.setString('photoLeft', value);
+  }
+
+  String get photoCenter {
+    return _prefs.getString('photoCenter') ?? '';
+  }
+
+  set photoCenter(String value) {
+    _prefs.setString('photoCenter', value);
+  }
+
+  String get photoRight {
+    return _prefs.getString('photoRight') ?? '';
+  }
+
+  set photoRight(String value) {
+    _prefs.setString('photoRight', value);
+  }
+
+  String get description {
+    return _prefs.getString('description') ?? '';
+  }
+
+  set description(String value) {
+    _prefs.setString('description', value);
   }
 }
