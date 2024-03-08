@@ -1337,8 +1337,6 @@ class ImagenEncabezado extends StatefulWidget {
 }
 
 class _ImagenEncabezadoState extends State<ImagenEncabezado> {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
   @override
   Widget build(BuildContext context) {
     return Image.network(

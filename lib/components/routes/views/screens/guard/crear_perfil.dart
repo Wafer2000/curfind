@@ -1,4 +1,5 @@
 // ignore_for_file: use_build_context_synchronously, unused_local_variable, unused_field, unused_element, no_leading_underscores_for_local_identifiers, avoid_print, unnecessary_null_comparison, library_private_types_in_public_api
+import 'dart:ffi';
 import 'dart:io';
 import 'package:animate_do/animate_do.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

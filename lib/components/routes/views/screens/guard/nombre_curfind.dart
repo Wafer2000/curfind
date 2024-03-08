@@ -35,7 +35,7 @@ class _NombreCurfindState extends State<NombreCurfind> {
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> _snapshot) {
           _isSwitched = _snapshot.data?['Estado'];
 
-          Color _textColor = _isSwitched == true
+          _textColor = _isSwitched == true
               ? TextColor.purple().color
               : TextColor.green().color;
 
@@ -44,6 +44,13 @@ class _NombreCurfindState extends State<NombreCurfind> {
               child: Image.asset(
                 'assets/nombre_curfind.png',
                 color: _textColor,
+                errorBuilder: (context, url, error) => SizedBox(
+                  width: 127.7,
+                  child: Image.asset(
+                    'assets/nombre_curfind.png',
+                    color: TextColor.purple().color,
+                  ),
+                ),
               ));
         });
   }
